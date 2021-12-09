@@ -34,6 +34,8 @@ public abstract class FunctionJButton extends JButton implements ActionListener 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (buttonFunction == null) return;
+
 		buttonFunction.onClick();
 	}
 }

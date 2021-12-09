@@ -30,6 +30,7 @@ public interface ModelInterface {
 	void percent();
 	void reciprocal();
 	void power();
+	void power(int x);
 	void sqrt();
 	void log();
 

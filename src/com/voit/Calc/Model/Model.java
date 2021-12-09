@@ -34,6 +34,9 @@ public class Model implements ModelInterface, ModelObservable {
 		observers = new ArrayList<>();
 		history = new ArrayList<>();
 		operations = new boolean[N_OPERATIONS];
+		x = new Number();
+		y = new Number();
+		memory = new Number();
 	}
 
 	//Getters
@@ -259,6 +262,12 @@ public class Model implements ModelInterface, ModelObservable {
 		notifyObservers();
 	}
 
+	public void power(int power) {
+		double value = Math.pow(x.getValue(), power);
+		x.setFields(value);
+		notifyObservers();
+	}
+
 	public void sqrt() {
 		if (x.getValue() < 0) return;
 
@@ -288,8 +297,7 @@ public class Model implements ModelInterface, ModelObservable {
 	}
 
 	public void notifyObservers() {
-		//todo notify observers method
-		System.out.println("Notify observers");
+//		System.out.println("Notify observers");
 		for (int i=0; i<observers.size(); i++){
 			observers.get(i).update();
 		}

@@ -1,6 +1,20 @@
 package com.voit.Calc.Model;
 
 public interface ModelInterface {
+	// Operations:
+	// 0 - add
+	// 1 - subtract
+	// 2 - multiply
+	// 3 - divide
+	// 4 - power
+	int N_OPERATIONS = 5;
+	int NO_OP = -1;
+	int ADD = 0;
+	int SUBTRACT = 1;
+	int MULTIPLY = 2;
+	int DIVIDE = 3;
+	int POWER = 4;
+
 	Number getX();
 	Number getY();
 	Number getMemory();
@@ -30,6 +44,7 @@ public interface ModelInterface {
 	void percent();
 	void reciprocal();
 	void power();
+	void power(int x);
 	void sqrt();
 	void log();
 

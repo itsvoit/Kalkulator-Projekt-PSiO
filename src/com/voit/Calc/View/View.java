@@ -9,8 +9,8 @@ import java.awt.*;
 public class View {
 	//Constants
 	private final String APP_NAME = "Calculator";
-	private final int FRAME_X = 300;
-	private final int FRAME_Y = 400;
+	private final int FRAME_X = 500;
+	private final int FRAME_Y = 600;
 
 	//Fields
 	private ControllerInterface controller;
@@ -35,13 +35,34 @@ public class View {
 
 	private void createMainPanel(ModelInterface model){
 		mainPanel = new JPanel();
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+//		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+		mainPanel.setLayout(new GridBagLayout());
 
 		viewPanel = new ViewJPanel(model);
 		buttonsPanel = new SimpleCalcJPanel(model);
 
-		mainPanel.add(viewPanel);
-		mainPanel.add(buttonsPanel);
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.gridy = 0;
+		c.gridx = 0;
+		c.anchor = GridBagConstraints.PAGE_START;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 0.5;
+		c.weighty = 0.1;
+		mainPanel.add(viewPanel, c);
+
+		c = new GridBagConstraints();
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.gridy = 1;
+		c.gridx = 0;
+		c.anchor = GridBagConstraints.PAGE_END;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 0.5;
+		c.weighty = 0.3;
+		mainPanel.add(buttonsPanel, c);
 	}
 
 	public void makeGUI(){

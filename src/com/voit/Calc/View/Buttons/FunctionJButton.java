@@ -3,6 +3,7 @@ package com.voit.Calc.View.Buttons;
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,6 +20,7 @@ public abstract class FunctionJButton extends JButton implements ActionListener 
 
 	public FunctionJButton(){
 		this.addActionListener(this);
+		this.setFont(new Font("TimesRoman", Font.BOLD, 18));
 	}
 
 	public FunctionJButton(ButtonFunctionInterface buttonFunction){

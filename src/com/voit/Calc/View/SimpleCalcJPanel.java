@@ -13,6 +13,7 @@ public class SimpleCalcJPanel extends JPanel {
 	private final int MAX_MEM_H = 50;
 
 	SimpleCalcJPanel(ModelInterface model){
+		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		makeMemoryButtons(model);
 		makeFunctionButtons(model);

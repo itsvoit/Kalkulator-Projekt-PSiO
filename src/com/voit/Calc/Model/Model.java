@@ -139,7 +139,7 @@ public class Model implements ModelInterface, ModelObservable {
 		if (memory.fractional && memory.fractionLen > 17) return;
 
 		double value = x.getValue() + memory.getValue();
-		memory.setFields(value);
+		memory.setValue(value);
 		notifyObservers();
 	}
 
@@ -148,7 +148,7 @@ public class Model implements ModelInterface, ModelObservable {
 		if (memory.fractional && memory.fractionLen > 17) return;
 
 		double value = memory.getValue() - x.getValue();
-		memory.setFields(value);
+		memory.setValue(value);
 		notifyObservers();
 	}
 
@@ -205,19 +205,19 @@ public class Model implements ModelInterface, ModelObservable {
 			case ADD:
 				value = x.getValue();
 				value += y.getValue();
-				x.setFields(value);
+				x.setValue(value);
 				break;
 
 			case SUBTRACT:
 				value = x.getValue();
 				value -= y.getValue();
-				x.setFields(value);
+				x.setValue(value);
 				break;
 
 			case MULTIPLY:
 				value = x.getValue();
 				value *= y.getValue();
-				x.setFields(value);
+				x.setValue(value);
 				break;
 
 			case DIVIDE:
@@ -225,13 +225,13 @@ public class Model implements ModelInterface, ModelObservable {
 				if (y.getValue() == 0) return;
 
 				value /= y.getValue();
-				x.setFields(value);
+				x.setValue(value);
 				break;
 
 			case POWER:
 				value = x.getValue();
 				value = Math.pow(value, y.getValue());
-				x.setFields(value);
+				x.setValue(value);
 				break;
 		}
 		y = new Number();
@@ -243,7 +243,7 @@ public class Model implements ModelInterface, ModelObservable {
 	//Complex operations
 	public void percent() {
 		double value = x.getValue() / 100;
-		x.setFields(value);
+		x.setValue(value);
 		notifyObservers();
 	}
 
@@ -251,7 +251,7 @@ public class Model implements ModelInterface, ModelObservable {
 		if (x.getValue() == 0) return;
 
 		double value = Math.pow(x.getValue(), -1);
-		x.setFields(value);
+		x.setValue(value);
 		notifyObservers();
 	}
 
@@ -264,7 +264,7 @@ public class Model implements ModelInterface, ModelObservable {
 
 	public void power(int power) {
 		double value = Math.pow(x.getValue(), power);
-		x.setFields(value);
+		x.setValue(value);
 		notifyObservers();
 	}
 
@@ -272,7 +272,7 @@ public class Model implements ModelInterface, ModelObservable {
 		if (x.getValue() < 0) return;
 
 		double value = Math.sqrt(x.getValue());
-		x.setFields(value);
+		x.setValue(value);
 		notifyObservers();
 	}
 
@@ -280,7 +280,7 @@ public class Model implements ModelInterface, ModelObservable {
 		if (x.getValue() <= 0) return;
 
 		double value = Math.log10(x.getValue());
-		x.setFields(value);
+		x.setValue(value);
 		notifyObservers();
 	}
 
@@ -297,7 +297,7 @@ public class Model implements ModelInterface, ModelObservable {
 	}
 
 	public void notifyObservers() {
-//		System.out.println("Notify observers");
+		System.out.println("Notify observers");
 		for (int i=0; i<observers.size(); i++){
 			observers.get(i).update();
 		}

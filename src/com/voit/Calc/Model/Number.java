@@ -30,7 +30,11 @@ public class Number implements Cloneable{
 		return value;
 	}
 
-	public void setFields(double value){
+	public String getString(){
+		return Double.toString(getValue());
+	}
+
+	public void setValue(double value){
 		intVal = (int) value;
 		intLen = getLen(intVal);
 

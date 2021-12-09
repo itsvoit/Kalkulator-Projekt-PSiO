@@ -64,12 +64,22 @@ public class Model implements ModelInterface, ModelObservable {
 		if (!x.fractional && x.intLen > 17) return;
 		if (x.fractional && x.fractionLen > 17) return;
 
-		if (!x.fractional) {
+		if (!x.fractional && !x.negative) { //not fractional, not negative
 			x.intLen++;
 			x.intVal *= 10;
 			x.intVal += value;
 		}
-		else {
+		else if (!x.negative){ //fractional, not negative
+			x.fractionLen++;
+			x.fractionVal *= 10;
+			x.fractionVal += value;
+		}
+		else if (!x.fractional){ //not fractional, negative
+			x.intLen++;
+			x.intVal *= 10;
+			x.intVal += value;
+		}
+		else{ //fractional, negative
 			x.fractionLen++;
 			x.fractionVal *= 10;
 			x.fractionVal += value;
@@ -198,7 +208,7 @@ public class Model implements ModelInterface, ModelObservable {
 
 	public void negate() {
 		x.negative = !x.negative;
-		initVal = false;
+//		initVal = false;
 		notifyObservers();
 	}
 
@@ -330,8 +340,22 @@ public class Model implements ModelInterface, ModelObservable {
 
 	private void showDebug(){
 		System.out.println("------------------");
-		System.out.printf("x: %f\ny: %f\nmem: %f\n", x.getValue(), y.getValue(), memory.getValue());
-		System.out.printf("x len: %d\ny len: %d\nmem len: %d\n", x.intLen, y.intLen, memory.intLen);
+		System.out.println("------------------");
+		showInfo(x, "X:");
+		System.out.println("------------------");
+		showInfo(y, "Y:");
+		System.out.println("------------------");
+		showInfo(memory, "Memory:");
+		System.out.println("------------------");
+	}
+
+	private void showInfo(Number num, String prompt){
+		System.out.println(prompt);
+		System.out.printf("value: %f\n", num.getValue());
+		System.out.printf("x int len: %d\n", num.intLen);
+		System.out.printf("x f len: %d\n", num.fractionLen);
+		System.out.printf("fractional: %b\nnegative: %b\n", num.fractional, num.negative);
+
 	}
 
 	private void clearOperations(){

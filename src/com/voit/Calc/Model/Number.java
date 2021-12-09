@@ -18,6 +18,7 @@ public class Number implements Cloneable{
 		clone.fractionVal = fractionVal;
 		clone.fractionLen = fractionLen;
 		clone.fractional = fractional;
+		clone.negative = negative;
 		return clone;
 	}
 
@@ -34,6 +35,9 @@ public class Number implements Cloneable{
 
 	public String getString(){
 		String text = "";
+
+		if (negative) text += "-";
+
 		text += intVal;
 		if (fractional) {
 			text += ".";
@@ -52,6 +56,7 @@ public class Number implements Cloneable{
 		negative = intVal < 0;
 
 		double fractionPart = value - intVal;
+		if (negative) intVal *= -1;
 		String fractionString = Double.toString(fractionPart);
 //		System.out.println(fractionString);
 		char[] fractionChars = new char[fractionString.length()];

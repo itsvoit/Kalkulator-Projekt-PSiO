@@ -6,7 +6,15 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FunctionJButton extends JButton implements ActionListener {
+/**
+ * @implNote Extend this class to make a functional button with loose ties to
+ * model extending ModelInterface.
+ *
+ * @implSpec Include correct strategy implementing ButtonFunctionInterface
+ *
+ * @see com.voit.Calc.Model.ModelInterface
+ */
+public abstract class FunctionJButton extends JButton implements ActionListener {
 	private ButtonFunctionInterface buttonFunction;
 
 	public FunctionJButton(){

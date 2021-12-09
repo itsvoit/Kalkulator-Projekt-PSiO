@@ -8,7 +8,27 @@ import java.util.ArrayList;
 public class Model implements ModelInterface, ModelObservable {
 	private ArrayList<ModelObserver> observers;
 
-	private long intValue;
+	ArrayList<String> history;
+
+	//Numbers
+	private Number memory;
+	private Number x;
+	private Number y;
+
+	// Operations:
+	// 0 - add
+	// 1 - subtract
+	// 2 - multiply
+	// 3 - divide
+	// 4 - power
+	private final int N_OPERATIONS = 5;
+	private final int NO_OP = -1;
+	private final int ADD = 0;
+	private final int SUBTRACT = 1;
+	private final int MULTIPLY = 2;
+	private final int DIVIDE = 3;
+	private final int POWER = 4;
+	boolean[] operations;
 
 	public Model(){
 		observers = new ArrayList<>();
@@ -19,15 +39,15 @@ public class Model implements ModelInterface, ModelObservable {
 	//Getters
 
 	public Number getX() {
-		return x;
+		return x.clone();
 	}
 
 	public Number getY() {
-		return y;
+		return y.clone();
 	}
 
 	public Number getMemory() {
-		return memory;
+		return memory.clone();
 	}
 
 	public int getOperation() {
@@ -46,8 +66,19 @@ public class Model implements ModelInterface, ModelObservable {
 	//todo check input-related functions
 	//Input operations
 	public void appendNumber(int value){
-		intValue *= 10;
-		intValue += value;
+		if (!x.fractional && x.intLen > 17) return;
+		if (x.fractional && x.fractionLen > 17) return;
+
+		if (!x.fractional) {
+			x.intLen++;
+			x.intVal *= 10;
+			x.intVal += value;
+		}
+		else {
+			x.fractionLen++;
+			x.fractionVal *= 10;
+			x.fractionVal += value;
+		}
 		notifyObservers();
 	}
 
@@ -67,13 +98,37 @@ public class Model implements ModelInterface, ModelObservable {
 		notifyObservers();
 	}
 
-	//todo memory-related functions
-	public void memoryClear() {
+	public void comma() {
+		if (x.fractional) return;
 
+		x.fractional = true;
+		notifyObservers();
+	}
+
+	public void clear() {
+		x = new Number();
+
+		notifyObservers();
+	}
+
+	public void clearAll() {
+		y = new Number();
+
+		clearOperations();
+
+		clear(); //notify is in clear
+	}
+
+	//todo check memory-related functions
+	//Memory operations
+	public void memoryClear() {
+		memory = new Number();
+		notifyObservers();
 	}
 
 	public void memoryRead() {
-
+		x = memory.clone();
+		notifyObservers();
 	}
 
 	public void memoryAdd() {
@@ -95,7 +150,8 @@ public class Model implements ModelInterface, ModelObservable {
 	}
 
 	public void memoryWrite() {
-
+		memory = x.clone();
+		notifyObservers();
 	}
 
 	//todo simple operation-related functions
@@ -180,14 +236,20 @@ public class Model implements ModelInterface, ModelObservable {
 		notifyObservers();
 	}
 
-	//todo complex operation-related functions
+	//todo check complex operation-related functions
 	//Complex operations
 	public void percent() {
-
+		double value = x.getValue() / 100;
+		x.setFields(value);
+		notifyObservers();
 	}
 
 	public void reciprocal() {
+		if (x.getValue() == 0) return;
 
+		double value = Math.pow(x.getValue(), -1);
+		x.setFields(value);
+		notifyObservers();
 	}
 
 	public void power() {
@@ -198,11 +260,19 @@ public class Model implements ModelInterface, ModelObservable {
 	}
 
 	public void sqrt() {
+		if (x.getValue() < 0) return;
 
+		double value = Math.sqrt(x.getValue());
+		x.setFields(value);
+		notifyObservers();
 	}
 
 	public void log() {
+		if (x.getValue() <= 0) return;
 
+		double value = Math.log10(x.getValue());
+		x.setFields(value);
+		notifyObservers();
 	}
 
 	public void registerObserver(ModelObserver o) {

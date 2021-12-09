@@ -7,12 +7,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class FunctionJButton extends JButton implements ActionListener {
-	ButtonFunctionInterface buttonFunction;
+	private ButtonFunctionInterface buttonFunction;
+
+	public FunctionJButton(){
+		this.addActionListener(this);
+	}
 
 	public FunctionJButton(ButtonFunctionInterface buttonFunction){
-		super(buttonFunction.getString());
+		this();
 		this.buttonFunction = buttonFunction;
-		this.addActionListener(this);
+		super.setText(buttonFunction.getString());
+	}
+
+	public void setButtonFunction(ButtonFunctionInterface buttonFunction) {
+		this.buttonFunction = buttonFunction;
+		super.setText(buttonFunction.getString());
 	}
 
 	@Override

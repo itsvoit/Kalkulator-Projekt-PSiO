@@ -9,8 +9,8 @@ import java.awt.*;
 public class View {
 	//Constants
 	private final String APP_NAME = "Calculator";
-	private final int FRAME_X = 450;
-	private final int FRAME_Y = 550;
+	private final int FRAME_X = 500;
+	private final int FRAME_Y = 600;
 
 	//Fields
 	private ControllerInterface controller;

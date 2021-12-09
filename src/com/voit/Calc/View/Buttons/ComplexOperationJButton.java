@@ -9,6 +9,7 @@ public class ComplexOperationJButton extends FunctionJButton{
 	public static final int POWER = 2;
 	public static final int SQRT = 3;
 	public static final int LOG = 4;
+	public static final int POWER2 = 5;
 
 	public ComplexOperationJButton(int option, ModelInterface model){
 		super();
@@ -31,6 +32,10 @@ public class ComplexOperationJButton extends FunctionJButton{
 
 			case LOG:
 				setButtonFunction(new ButtonOperationLog(model));
+				break;
+
+			case POWER2:
+				setButtonFunction(new ButtonOperationPower(model, 2));
 				break;
 
 		}

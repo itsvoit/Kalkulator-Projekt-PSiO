@@ -15,20 +15,10 @@ public class Model implements ModelInterface, ModelObservable {
 	private Number x;
 	private Number y;
 
-	// Operations:
-	// 0 - add
-	// 1 - subtract
-	// 2 - multiply
-	// 3 - divide
-	// 4 - power
-	private final int N_OPERATIONS = 5;
-	private final int NO_OP = -1;
-	private final int ADD = 0;
-	private final int SUBTRACT = 1;
-	private final int MULTIPLY = 2;
-	private final int DIVIDE = 3;
-	private final int POWER = 4;
-	boolean[] operations;
+
+	private boolean[] operations;
+
+	private boolean initVal;
 
 	public Model(){
 		observers = new ArrayList<>();
@@ -37,6 +27,7 @@ public class Model implements ModelInterface, ModelObservable {
 		x = new Number();
 		y = new Number();
 		memory = new Number();
+		initVal = true;
 	}
 
 	//Getters
@@ -69,6 +60,7 @@ public class Model implements ModelInterface, ModelObservable {
 	//todo check input-related functions
 	//Input operations
 	public void appendNumber(int value){
+		checkInitValue();
 		if (!x.fractional && x.intLen > 17) return;
 		if (x.fractional && x.fractionLen > 17) return;
 
@@ -86,6 +78,7 @@ public class Model implements ModelInterface, ModelObservable {
 	}
 
 	public void deductNumber() {
+		checkInitValue();
 		if (!x.fractional && x.intLen == 0) return;
 
 		if (x.fractional && x.fractionLen == 0) {
@@ -102,6 +95,7 @@ public class Model implements ModelInterface, ModelObservable {
 	}
 
 	public void comma() {
+		checkInitValue();
 		if (x.fractional) return;
 
 		x.fractional = true;
@@ -110,6 +104,7 @@ public class Model implements ModelInterface, ModelObservable {
 
 	public void clear() {
 		x = new Number();
+		initVal = true;
 
 		notifyObservers();
 	}
@@ -118,6 +113,7 @@ public class Model implements ModelInterface, ModelObservable {
 		y = new Number();
 
 		clearOperations();
+		memory = new Number();
 
 		clear(); //notify is in clear
 	}
@@ -131,6 +127,7 @@ public class Model implements ModelInterface, ModelObservable {
 
 	public void memoryRead() {
 		x = memory.clone();
+		initVal = false;
 		notifyObservers();
 	}
 
@@ -157,42 +154,55 @@ public class Model implements ModelInterface, ModelObservable {
 		notifyObservers();
 	}
 
-	//todo simple operation-related functions
+	//todo check simple operation-related functions
 	//Simple operations
 	public void add() {
+		if (getOperation() != -1) equals();
+		clearOperations();
 		operations[ADD] = true;
 		y = x.clone();
 		x = new Number();
+		initVal = false;
 		notifyObservers();
 	}
 
 	public void subtract() {
+		if (getOperation() != -1) equals();
+		clearOperations();
 		operations[SUBTRACT] = true;
 		y = x.clone();
 		x = new Number();
+		initVal = false;
 		notifyObservers();
 	}
 
 	public void multiply() {
+		if (getOperation() != -1) equals();
+		clearOperations();
 		operations[MULTIPLY] = true;
 		y = x.clone();
 		x = new Number();
+		initVal = false;
 		notifyObservers();
 	}
 
 	public void divide() {
+		if (getOperation() != -1) equals();
+		clearOperations();
 		operations[DIVIDE] = true;
 		y = x.clone();
 		x = new Number();
+		initVal = false;
 		notifyObservers();
 	}
 
 	public void negate() {
 		x.negative = !x.negative;
+		initVal = false;
 		notifyObservers();
 	}
 
-	//todo equals function
+	//todo check equals function
 	//Equals method
 	public void equals() {
 		int operation = -1;
@@ -205,12 +215,15 @@ public class Model implements ModelInterface, ModelObservable {
 			case ADD:
 				value = x.getValue();
 				value += y.getValue();
+//				System.out.println(x.getValue());
+//				System.out.println(y.getValue());
+//				System.out.println(value);
 				x.setValue(value);
 				break;
 
 			case SUBTRACT:
-				value = x.getValue();
-				value -= y.getValue();
+				value = y.getValue();
+				value -= x.getValue();
 				x.setValue(value);
 				break;
 
@@ -221,21 +234,22 @@ public class Model implements ModelInterface, ModelObservable {
 				break;
 
 			case DIVIDE:
-				value = x.getValue();
-				if (y.getValue() == 0) return;
+				value = y.getValue();
+				if (x.getValue() == 0) return;
 
-				value /= y.getValue();
+				value /= x.getValue();
 				x.setValue(value);
 				break;
 
 			case POWER:
-				value = x.getValue();
-				value = Math.pow(value, y.getValue());
+				value = y.getValue();
+				value = Math.pow(value, x.getValue());
 				x.setValue(value);
 				break;
 		}
 		y = new Number();
-
+		initVal = false;
+		clearOperations();
 		notifyObservers();
 	}
 
@@ -244,6 +258,7 @@ public class Model implements ModelInterface, ModelObservable {
 	public void percent() {
 		double value = x.getValue() / 100;
 		x.setValue(value);
+		initVal = false;
 		notifyObservers();
 	}
 
@@ -252,19 +267,24 @@ public class Model implements ModelInterface, ModelObservable {
 
 		double value = Math.pow(x.getValue(), -1);
 		x.setValue(value);
+		initVal = false;
 		notifyObservers();
 	}
 
 	public void power() {
+		if (getOperation() != -1) equals();
+		clearOperations();
 		operations[POWER] = true;
 		y = x.clone();
 		x = new Number();
+		initVal = false;
 		notifyObservers();
 	}
 
 	public void power(int power) {
 		double value = Math.pow(x.getValue(), power);
 		x.setValue(value);
+		initVal = false;
 		notifyObservers();
 	}
 
@@ -273,6 +293,7 @@ public class Model implements ModelInterface, ModelObservable {
 
 		double value = Math.sqrt(x.getValue());
 		x.setValue(value);
+		initVal = false;
 		notifyObservers();
 	}
 
@@ -281,6 +302,7 @@ public class Model implements ModelInterface, ModelObservable {
 
 		double value = Math.log10(x.getValue());
 		x.setValue(value);
+		initVal = false;
 		notifyObservers();
 	}
 
@@ -297,15 +319,29 @@ public class Model implements ModelInterface, ModelObservable {
 	}
 
 	public void notifyObservers() {
-		System.out.println("Notify observers");
+//		System.out.println("Notify observers");
 		for (int i=0; i<observers.size(); i++){
 			observers.get(i).update();
 		}
+		showDebug(); //todo comment
 	}
 
 	//Helper methods
 
+	private void showDebug(){
+		System.out.println("------------------");
+		System.out.printf("x: %f\ny: %f\nmem: %f\n", x.getValue(), y.getValue(), memory.getValue());
+		System.out.printf("x len: %d\ny len: %d\nmem len: %d\n", x.intLen, y.intLen, memory.intLen);
+	}
+
 	private void clearOperations(){
 		for (int i=0; i<operations.length; i++) operations[i] = false;
+	}
+
+	private void checkInitValue(){
+		if (!initVal){
+			clear();
+			initVal = true;
+		}
 	}
 }

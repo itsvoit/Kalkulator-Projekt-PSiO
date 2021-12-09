@@ -1,5 +1,12 @@
 package com.voit.Calc.Model;
 
 public interface ModelInterface {
-	void addNumber(int value);
+	void appendNumber(int value);
+	void deductNumber();
+
+	void memoryClear();
+	void memoryRead();
+	void memoryAdd();
+	void memorySubtract();
+	void memoryWrite();
 }

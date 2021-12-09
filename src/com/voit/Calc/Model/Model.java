@@ -14,31 +14,49 @@ public class Model implements ModelInterface, ModelObservable {
 		observers = new ArrayList<>();
 	}
 
-	public void addNumber(int value){
+	public void appendNumber(int value){
 		intValue *= 10;
 		intValue += value;
 		notifyObservers();
 	}
 
+	public void deductNumber() {
 
+	}
 
+	//todo memory-related functions
+	public void memoryClear() {
 
+	}
 
-	@Override
+	public void memoryRead() {
+
+	}
+
+	public void memoryAdd() {
+
+	}
+
+	public void memorySubtract() {
+
+	}
+
+	public void memoryWrite() {
+
+	}
+
 	public void registerObserver(ModelObserver o) {
 		if (observers.contains(o)) return;
 
 		observers.add(o);
 	}
 
-	@Override
 	public void removeObserver(ModelObserver o) {
 		if (!observers.contains(o)) return;
 
 		observers.remove(o);
 	}
 
-	@Override
 	public void notifyObservers() {
 		//todo notify observers method
 		System.out.println("Notify observers");

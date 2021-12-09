@@ -17,6 +17,7 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	private final int V_GAP = 5;
 	private final int PANEL_H = 800;
 	private final Font FONT = new Font("TimesRoman", Font.BOLD, 18);
+	private final Font FONT_COMPONENTS = new Font("TimesRoman", Font.BOLD, 18);
 	private final Font OPERATION_FONT = new Font("TimesRoman", Font.BOLD, 28);
 
 	private JTextPane operationImg;
@@ -147,7 +148,7 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		textPane.setEditable(false);
 		textPane.setBorder(BorderFactory.createEmptyBorder());
 		textPane.setOpaque(false);
-		textPane.setFont(FONT);
+		textPane.setFont(FONT_COMPONENTS);
 
 		StyledDocument documentStyle = textPane.getStyledDocument();
 		SimpleAttributeSet centerAttribute = new SimpleAttributeSet();

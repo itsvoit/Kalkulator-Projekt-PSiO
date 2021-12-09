@@ -64,7 +64,7 @@ public class Number implements Cloneable{
 
 		long fractionLong = 0;
 		int len=0;
-		for (; len<18 && len+2<fractionChars.length; len++){
+		for (; len<16 && len+2<fractionChars.length; len++){
 			fractionLong *= 10;
 			fractionLong += Character.getNumericValue(fractionChars[len+2]);
 		}

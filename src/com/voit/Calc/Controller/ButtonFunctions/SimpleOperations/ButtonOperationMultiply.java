@@ -17,6 +17,6 @@ public class ButtonOperationMultiply  implements ButtonFunctionInterface {
 
 	@Override
 	public String getString() {
-		return "X";
+		return "x";
 	}
 }

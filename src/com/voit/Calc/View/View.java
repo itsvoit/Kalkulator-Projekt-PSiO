@@ -1,54 +1,57 @@
 package com.voit.Calc.View;
 
-import com.voit.Calc.Controller.ButtonFunctions.ButtonNumber;
 import com.voit.Calc.Controller.ControllerInterface;
 import com.voit.Calc.Model.ModelInterface;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class View {
 	//Constants
 	private final String APP_NAME = "Calculator";
-	private final int FRAME_X = 400;
+	private final int FRAME_X = 300;
 	private final int FRAME_Y = 400;
 
+	//Fields
 	private ControllerInterface controller;
 
-	JFrame mainFrame;
-	JPanel mainPanel;
+	private JFrame mainFrame;
+	private JPanel mainPanel;
+	private JPanel viewPanel;
+	private JPanel buttonsPanel;
 
-	JMenuBar mainMenuBar;
-	JMenu menuFile;
-	JMenuItem menuExit;
-	JMenuItem menuAbout;
-
-	JButtonFunction button1;
+	private JMenuBar mainMenuBar;
+	private JMenu menuFile;
+	private JMenuItem menuExit;
+	private JMenuItem menuAbout;
 
 
-
-	//get model to register observers
+	//use model to register observers
 	public View(ControllerInterface controller, ModelInterface model){
 		this.controller = controller;
 
-		button1 = new JButtonFunction(new ButtonNumber(1, model));
+		createMainPanel(model);
+	}
 
-		//register observers here \/ \/ \/ \/ //todo register observers
+	private void createMainPanel(ModelInterface model){
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+		viewPanel = new ViewJPanel(model);
+		buttonsPanel = new SimpleCalcJPanel(model);
+
+		mainPanel.add(viewPanel);
+		mainPanel.add(buttonsPanel);
 	}
 
 	public void makeGUI(){
 		mainFrame = new JFrame(APP_NAME);
-		mainPanel = new JPanel();
 		mainFrame.getContentPane().add(mainPanel);
 
 		mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		mainFrame.setSize(new Dimension(FRAME_X, FRAME_Y));
 		mainFrame.setMinimumSize(new Dimension(FRAME_X, FRAME_Y));
 		mainFrame.setResizable(true);
-
-		mainPanel.add(button1);
 
 		makeMenu();
 	}

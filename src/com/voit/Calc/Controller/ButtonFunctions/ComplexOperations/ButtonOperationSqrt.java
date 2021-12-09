@@ -1,22 +1,22 @@
-package com.voit.Calc.Controller.ButtonFunctions.SimpleOperations;
+package com.voit.Calc.Controller.ButtonFunctions.ComplexOperations;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
 import com.voit.Calc.Model.ModelInterface;
 
-public class ButtonOperationNegate implements ButtonFunctionInterface {
+public class ButtonOperationSqrt  implements ButtonFunctionInterface {
 	ModelInterface model;
 
-	public ButtonOperationNegate(ModelInterface model){
+	public ButtonOperationSqrt(ModelInterface model){
 		this.model = model;
 	}
 
 	@Override
 	public void onClick() {
-		model.negate();
+		model.sqrt();
 	}
 
 	@Override
 	public String getString() {
-		return "+/-";
+		return "sqrt(x)";
 	}
 }

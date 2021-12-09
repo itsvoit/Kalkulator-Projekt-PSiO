@@ -12,7 +12,7 @@ public class ButtonOperationSubtract implements ButtonFunctionInterface {
 
 	@Override
 	public void onClick() {
-		model.();
+		model.subtract();
 	}
 
 	@Override

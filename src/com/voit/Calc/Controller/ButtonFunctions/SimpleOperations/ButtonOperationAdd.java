@@ -12,7 +12,7 @@ public class ButtonOperationAdd implements ButtonFunctionInterface {
 
 	@Override
 	public void onClick() {
-		model.();
+		model.add();
 	}
 
 	@Override

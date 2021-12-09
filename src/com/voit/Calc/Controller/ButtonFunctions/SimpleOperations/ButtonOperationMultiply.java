@@ -12,7 +12,7 @@ public class ButtonOperationMultiply  implements ButtonFunctionInterface {
 
 	@Override
 	public void onClick() {
-		model.();
+		model.multiply();
 	}
 
 	@Override

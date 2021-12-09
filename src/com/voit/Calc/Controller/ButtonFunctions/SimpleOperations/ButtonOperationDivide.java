@@ -12,7 +12,7 @@ public class ButtonOperationDivide  implements ButtonFunctionInterface {
 
 	@Override
 	public void onClick() {
-		model.();
+		model.divide();
 	}
 
 	@Override

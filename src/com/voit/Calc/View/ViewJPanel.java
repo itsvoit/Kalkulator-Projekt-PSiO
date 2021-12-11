@@ -16,9 +16,9 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	private final int H_GAP = 5;
 	private final int V_GAP = 5;
 	private final int PANEL_H = 800;
-	private final Font FONT = new Font("TimesRoman", Font.BOLD, 18);
-	private final Font FONT_COMPONENTS = new Font("TimesRoman", Font.BOLD, 18);
-	private final Font OPERATION_FONT = new Font("TimesRoman", Font.BOLD, 28);
+	private Font FONT = new Font("TimesRoman", Font.BOLD, 18);
+	private Font FONT_COMPONENTS = new Font("TimesRoman", Font.BOLD, 18);
+	private Font OPERATION_FONT = new Font("TimesRoman", Font.BOLD, 28);
 
 	private JTextPane operationImg;
 	private JTextPane memoryField;
@@ -75,7 +75,19 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		fixJTextField(xField);
 		fixJTextField(yField);
 
-		xField.setText("0");
+		setXFieldText("0");
+	}
+
+	protected void setXFieldText(String text){
+		xField.setText(text);
+	}
+
+	protected void setYFieldText(String text){
+		yField.setText(text);
+	}
+
+	protected void setMemoryFieldText(String text){
+		memoryField.setText(text);
 	}
 
 	@Override
@@ -86,7 +98,7 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		NumberInterface memory = model.getMemory();
 		int operation = model.getOperation();
 
-		xField.setText(x.getString());
+		setXFieldText(x.getString());
 		setYVal(y);
 		setMemVal(memory);
 
@@ -98,16 +110,16 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	//Helper
 
 	private void setYVal(NumberInterface y){
-		if (y.getString().equals("0")) yField.setText("");
-		else yField.setText(y.getString());
+		if (y.getString().equals("0")) setXFieldText("");
+		else setYFieldText(y.getString());
 	}
 
 	private void setMemVal(NumberInterface mem){
-		if (mem.getString().equals("0")) memoryField.setText("");
+		if (mem.getString().equals("0")) setMemoryFieldText("");
 		else {
 			String text = "Mem: ";
 			text += mem.getString();
-			memoryField.setText(text);
+			setMemoryFieldText(text);
 		}
 	}
 

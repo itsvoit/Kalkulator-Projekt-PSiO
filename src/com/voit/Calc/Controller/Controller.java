@@ -14,4 +14,6 @@ public class Controller implements ControllerInterface{
 		view.makeGUI();
 		view.showGUI();
 	}
+
+
 }

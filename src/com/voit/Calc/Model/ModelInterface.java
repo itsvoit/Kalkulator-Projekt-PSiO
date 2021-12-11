@@ -7,6 +7,7 @@ public interface ModelInterface {
 	// 2 - multiply
 	// 3 - divide
 	// 4 - power
+	//-1 - no operation set
 	int N_OPERATIONS = 5;
 	int NO_OP = -1;
 	int ADD = 0;

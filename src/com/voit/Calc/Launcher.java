@@ -13,6 +13,8 @@ public class Launcher {
 
 	private void go(){
 		ModelInterface model = new Model();
-		ControllerInterface controller = new Controller(model);
+		ControllerInterface controller1 = new Controller(model); //controller using model
+
+//		ControllerInterface controller2 = new Controller(new ModelOnDouble()); //controller using model on double
 	}
 }

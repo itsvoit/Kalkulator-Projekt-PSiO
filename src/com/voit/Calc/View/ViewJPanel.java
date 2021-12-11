@@ -25,7 +25,7 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	private JTextPane xField;
 	private JTextPane yField;
 
-	private ModelInterface model;
+	protected ModelInterface model;
 
 	//use model to register observers
 	public ViewJPanel(ModelInterface model){
@@ -111,7 +111,7 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		}
 	}
 
-	private void setOperation(int option){ //todo set image based on current operation
+	protected void setOperation(int option){ //todo set image based on current operation
 		switch (option){
 			case ModelInterface.ADD:
 				operationImg.setText("+");
@@ -139,12 +139,12 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		}
 	}
 
-	private void refresh(){
+	protected void refresh(){
 		this.revalidate();
 		this.repaint();
 	}
 
-	private void fixJTextField(JTextPane textPane){
+	protected void fixJTextField(JTextPane textPane){
 		textPane.setEditable(false);
 		textPane.setBorder(BorderFactory.createEmptyBorder());
 		textPane.setOpaque(false);

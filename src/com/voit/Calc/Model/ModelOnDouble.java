@@ -8,22 +8,23 @@ import java.util.ArrayList;
 public class ModelOnDouble implements ModelInterface, ModelObservable {
     private ArrayList<ModelObserver> observers;
 
-    private double xVal;
-    private double yVal;
+    private double xVal; //current number
+    private double yVal; //previous number
     private double memoryVal;
 
-    private String xString;
+    private String xString; //for initial user input
 
-    private int intLen;
-    private int fractionLen;
+    private int intLen; //for bounding integer size
+    private int fractionLen; //for bounding fraction precision
 
     private int operation;
 
-    private boolean userInputting;
+    //determines whether the x number is input by user or by operation
+    private boolean userInput;
     private boolean comma;
 
     public ModelOnDouble(){
-        userInputting = true;
+        userInput = true;
         observers = new ArrayList<>();
     }
 
@@ -67,7 +68,7 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
         }
         xVal = 0;
         comma = false;
-        userInputting = true;
+        userInput = true;
 
         notifyObservers();
     }

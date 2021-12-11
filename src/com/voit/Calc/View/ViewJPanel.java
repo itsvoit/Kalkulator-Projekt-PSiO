@@ -3,7 +3,7 @@ package com.voit.Calc.View;
 import com.voit.Calc.Model.ModelInterface;
 import com.voit.Calc.Model.ModelObservers.ModelObservable;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
-import com.voit.Calc.Model.Number;
+import com.voit.Calc.Model.NumberInterface;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -81,9 +81,9 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	@Override
 	public void update() {
 //		System.out.println("Update");
-		Number x = model.getX();
-		Number y = model.getY();
-		Number memory = model.getMemory();
+		NumberInterface x = model.getX();
+		NumberInterface y = model.getY();
+		NumberInterface memory = model.getMemory();
 		int operation = model.getOperation();
 
 		xField.setText(x.getString());
@@ -97,12 +97,12 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 
 	//Helper
 
-	private void setYVal(Number y){
+	private void setYVal(NumberInterface y){
 		if (y.getString().equals("0")) yField.setText("");
 		else yField.setText(y.getString());
 	}
 
-	private void setMemVal(Number mem){
+	private void setMemVal(NumberInterface mem){
 		if (mem.getString().equals("0")) memoryField.setText("");
 		else {
 			String text = "Mem: ";

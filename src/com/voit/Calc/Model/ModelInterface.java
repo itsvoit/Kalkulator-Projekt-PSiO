@@ -15,9 +15,9 @@ public interface ModelInterface {
 	int DIVIDE = 3;
 	int POWER = 4;
 
-	Number getX();
-	Number getY();
-	Number getMemory();
+	NumberInterface getX();
+	NumberInterface getY();
+	NumberInterface getMemory();
 	int getOperation();
 
 	void appendNumber(int value);

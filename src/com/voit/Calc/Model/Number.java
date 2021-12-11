@@ -1,6 +1,6 @@
 package com.voit.Calc.Model;
 
-public class Number implements Cloneable{
+public class Number implements NumberInterface, Cloneable{
 	public long intVal;
 	public int intLen;
 	public long fractionVal;

@@ -263,13 +263,17 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
             userInput = true;
         }
         if (newOp < ADD || newOp > POWER) return;
-        equals();
+
+        if (xVal != 0 && yVal != 0) equals();
+        operation = newOp;
+        userInput = true;
+
+        if (xVal == 0) return;
+
         yVal = xVal;
         xVal = 0;
         comma = false;
         xString = "";
-        operation = newOp;
-        userInput = true;
     }
 
     private void checkForComma(){

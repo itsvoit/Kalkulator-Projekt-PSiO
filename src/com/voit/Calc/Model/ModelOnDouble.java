@@ -27,6 +27,7 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
         userInput = true;
         observers = new ArrayList<>();
         xString = "";
+        operation = NO_OP;
     }
 
     //Getters
@@ -49,7 +50,11 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
 
     //Operations
     public void appendNumber(int value) {
+        if (!userInput){
+            clear();
+        }
         xString += value;
+        convertInput();
         notifyObservers();
     }
 
@@ -67,7 +72,8 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
     public void comma() {
         if (comma) return; //comma exists
         comma = true;
-        xString += ",";
+        if (xString.equals("")) xString += "0"; //if "" we want to show "0." instead of "."
+        xString += ".";
         notifyObservers();
     }
 
@@ -77,14 +83,17 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
             memoryVal = 0;
         }
         xVal = 0;
+        xString = "";
         comma = false;
         userInput = true;
+        setOperation(NO_OP);
 
         notifyObservers();
     }
 
     public void clearAll() {
         xVal = 0;
+        xString = "";
         clear();
     }
 
@@ -117,37 +126,44 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
     }
 
     public void add() {
-        operation = ADD;
         convertInput();
+        setOperation(ADD);
         notifyObservers();
     }
 
     public void subtract() {
-        operation = SUBTRACT;
         convertInput();
+        setOperation(SUBTRACT);
         notifyObservers();
     }
 
     public void multiply() {
-        operation = MULTIPLY;
         convertInput();
+        setOperation(MULTIPLY);
         notifyObservers();
     }
 
     public void divide() {
-        operation = DIVIDE;
         convertInput();
+        setOperation(DIVIDE);
         notifyObservers();
     }
 
     public void negate() {
+        if (!userInput) return;
         convertInput();
         xVal *= -1;
+        xString = Double.toString(xVal);
+        int x = (int) xVal;
+        if (x == xVal) {
+            xString = xString.substring(0, xString.length() - 1); //delete the trailing 0
+            if (!comma) xString = xString.substring(0, xString.length() - 1); //delete comma sign
+        }
+
         notifyObservers();
     }
 
     public void equals() { //todo
-        userInput = false;
         convertInput();
 
         switch (operation){
@@ -169,13 +185,17 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
                 break;
 
             case POWER:
-                xVal = Math.pow(xVal, yVal);
+                xVal = Math.pow(yVal, xVal);
                 break;
 
             case NO_OP:
                 return;
         }
+        setOperation(NO_OP);
+        userInput = false;
         yVal = 0;
+        xString = "";
+        notifyObservers();
     }
 
     public void percent() {
@@ -189,12 +209,13 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
         userInput = false;
         convertInput();
         xVal = Math.pow(xVal, -1);
+        checkForComma();
         notifyObservers();
     }
 
     public void power() {
-        operation = POWER;
         convertInput();
+        setOperation(POWER);
         notifyObservers();
     }
 
@@ -202,6 +223,7 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
         userInput = false;
         convertInput();
         xVal = Math.pow(xVal, x);
+        checkForComma();
         notifyObservers();
     }
 
@@ -210,6 +232,7 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
         if (xVal < 0) return;
         userInput = false;
         xVal = Math.sqrt(xVal);
+        checkForComma();
         notifyObservers();
     }
 
@@ -218,14 +241,40 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
         if (xVal == 0) return;
         userInput = false;
         xVal = Math.log10(xVal);
+        checkForComma();
         notifyObservers();
     }
 
     private void convertInput(){
-        if (userInput) {
-            if (comma) xVal = Integer.parseInt(xString);
-            else xVal = Double.parseDouble(xString);
+        if (userInput && !xString.equals("")) {
+            String returnString = xString;
+            if (xString.charAt(xString.length()-1) == '.'){
+                returnString = returnString.substring(0, returnString.length()-1);
+            }
+            if (!comma) xVal = Integer.parseInt(returnString);
+            else xVal = Double.parseDouble(returnString);
+//            System.out.println(xVal);
         }
+    }
+
+    private void setOperation(int newOp){
+        if (newOp == NO_OP){
+            operation = NO_OP;
+            userInput = true;
+        }
+        if (newOp < ADD || newOp > POWER) return;
+        equals();
+        yVal = xVal;
+        xVal = 0;
+        comma = false;
+        xString = "";
+        operation = newOp;
+        userInput = true;
+    }
+
+    private void checkForComma(){
+        int x = (int) xVal;
+        comma = x != xVal;
     }
 
     //Observable methods

@@ -32,8 +32,7 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
 
     //Getters
     public NumberInterface getX() {
-        convertInput();
-        return new NumberDouble(xVal);
+        return new NumberDouble(xVal, comma);
     }
 
     public NumberInterface getY() {
@@ -71,6 +70,7 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
 
     public void comma() {
         if (comma) return; //comma exists
+        if (!userInput) return; //value in x is not user-generated
         comma = true;
         if (xString.equals("")) xString += "0"; //if "" we want to show "0." instead of "."
         xString += ".";

@@ -79,6 +79,11 @@ public class Number implements NumberInterface, Cloneable{
 		fractional = fractionVal != 0; //fractionVal != 0 ==> fractional = true
 	}
 
+	@Override
+	public boolean isFractional() {
+		return false;
+	}
+
 	private int getLen(long value){
 		int len = 0;
 		while (value > 0){

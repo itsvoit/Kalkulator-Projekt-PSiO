@@ -20,25 +20,18 @@ public class ViewJPanelOnDouble extends ViewJPanel{
 
         setXFieldText(xString);
         setYFieldText(getNumberString(y));
-        setXFieldText(getNumberString(memory));
+        setMemoryFieldText(getNumberString(memory));
 
         setOperation(model.getOperation());
     }
 
     private String getNumberString(NumberInterface num){
-        String string;
-        System.out.println(num.getString());
-        if (num.getValue() == 0){
+        String string = num.getString();
+
+        if (string.equals("0")){
             string = "";
         }
-        else if (num.getString().contains(".")){
-            string = num.getString();
-        }
-        else {
-            int xVal = (int) num.getValue();
-            System.out.println("Int val: " + xVal);
-            string = Integer.toString(xVal);
-        }
+
         return string;
     }
 }

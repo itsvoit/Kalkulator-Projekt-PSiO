@@ -7,6 +7,7 @@ public interface ModelInterface {
 	// 2 - multiply
 	// 3 - divide
 	// 4 - power
+	//-1 - no operation set
 	int N_OPERATIONS = 5;
 	int NO_OP = -1;
 	int ADD = 0;
@@ -15,9 +16,9 @@ public interface ModelInterface {
 	int DIVIDE = 3;
 	int POWER = 4;
 
-	Number getX();
-	Number getY();
-	Number getMemory();
+	NumberInterface getX();
+	NumberInterface getY();
+	NumberInterface getMemory();
 	int getOperation();
 
 	void appendNumber(int value);

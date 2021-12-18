@@ -3,7 +3,7 @@ package com.voit.Calc.View;
 import com.voit.Calc.Model.ModelInterface;
 import com.voit.Calc.Model.ModelObservers.ModelObservable;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
-import com.voit.Calc.Model.Number;
+import com.voit.Calc.Model.NumberInterface;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -16,16 +16,16 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	private final int H_GAP = 5;
 	private final int V_GAP = 5;
 	private final int PANEL_H = 800;
-	private final Font FONT = new Font("TimesRoman", Font.BOLD, 18);
-	private final Font FONT_COMPONENTS = new Font("TimesRoman", Font.BOLD, 18);
-	private final Font OPERATION_FONT = new Font("TimesRoman", Font.BOLD, 28);
+	private Font FONT = new Font("TimesRoman", Font.BOLD, 18);
+	private Font FONT_COMPONENTS = new Font("TimesRoman", Font.BOLD, 18);
+	private Font OPERATION_FONT = new Font("TimesRoman", Font.BOLD, 28);
 
 	private JTextPane operationImg;
 	private JTextPane memoryField;
 	private JTextPane xField;
 	private JTextPane yField;
 
-	private ModelInterface model;
+	protected ModelInterface model;
 
 	//use model to register observers
 	public ViewJPanel(ModelInterface model){
@@ -75,18 +75,30 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		fixJTextField(xField);
 		fixJTextField(yField);
 
-		xField.setText("0");
+		setXFieldText("0");
+	}
+
+	protected void setXFieldText(String text){
+		xField.setText(text);
+	}
+
+	protected void setYFieldText(String text){
+		yField.setText(text);
+	}
+
+	protected void setMemoryFieldText(String text){
+		memoryField.setText(text);
 	}
 
 	@Override
 	public void update() {
 //		System.out.println("Update");
-		Number x = model.getX();
-		Number y = model.getY();
-		Number memory = model.getMemory();
+		NumberInterface x = model.getX();
+		NumberInterface y = model.getY();
+		NumberInterface memory = model.getMemory();
 		int operation = model.getOperation();
 
-		xField.setText(x.getString());
+		setXFieldText(x.getString());
 		setYVal(y);
 		setMemVal(memory);
 
@@ -97,21 +109,21 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 
 	//Helper
 
-	private void setYVal(Number y){
-		if (y.getString().equals("0")) yField.setText("");
-		else yField.setText(y.getString());
+	private void setYVal(NumberInterface y){
+		if (y.getString().equals("0")) setXFieldText("");
+		else setYFieldText(y.getString());
 	}
 
-	private void setMemVal(Number mem){
-		if (mem.getString().equals("0")) memoryField.setText("");
+	private void setMemVal(NumberInterface mem){
+		if (mem.getString().equals("0")) setMemoryFieldText("");
 		else {
 			String text = "Mem: ";
 			text += mem.getString();
-			memoryField.setText(text);
+			setMemoryFieldText(text);
 		}
 	}
 
-	private void setOperation(int option){ //todo set image based on current operation
+	protected void setOperation(int option){ //todo set image based on current operation
 		switch (option){
 			case ModelInterface.ADD:
 				operationImg.setText("+");
@@ -139,12 +151,12 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		}
 	}
 
-	private void refresh(){
+	protected void refresh(){
 		this.revalidate();
 		this.repaint();
 	}
 
-	private void fixJTextField(JTextPane textPane){
+	protected void fixJTextField(JTextPane textPane){
 		textPane.setEditable(false);
 		textPane.setBorder(BorderFactory.createEmptyBorder());
 		textPane.setOpaque(false);

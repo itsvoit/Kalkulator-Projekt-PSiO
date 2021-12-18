@@ -1,6 +1,6 @@
 package com.voit.Calc.Model;
 
-public class Number implements Cloneable{
+public class Number implements NumberInterface, Cloneable{
 	public long intVal;
 	public int intLen;
 	public long fractionVal;
@@ -77,6 +77,11 @@ public class Number implements Cloneable{
 		System.out.println("===========================");
 
 		fractional = fractionVal != 0; //fractionVal != 0 ==> fractional = true
+	}
+
+	@Override
+	public boolean isFractional() {
+		return false;
 	}
 
 	private int getLen(long value){

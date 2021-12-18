@@ -12,7 +12,7 @@ public class Controller implements ControllerInterface{
 		this.view = new View(this, model);
 
 		view.makeGUI();
-		view.showGUI();
+		view.showFrame();
 	}
 
 

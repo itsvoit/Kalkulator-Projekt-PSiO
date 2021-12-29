@@ -3,6 +3,7 @@ package com.voit.Calc.Model;
 import com.voit.Calc.Model.ModelObservers.ModelObservable;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class Model implements ModelInterface, ModelObservable {
@@ -368,4 +369,62 @@ public class Model implements ModelInterface, ModelObservable {
 			initVal = true;
 		}
 	}
+
+	//-------------------------------------------------------
+	//-------------------- Matrix calc ----------------------
+
+	//Constants
+	private final String MATRICES_FILE = "matrices.ser";
+	private final int OVERWRITE = 0;
+	private final int APPEND = 1;
+
+
+	Matrix matrix1;
+	Matrix matrix2;
+	ArrayList<Matrix> matricesList;
+
+	public ArrayList<Matrix> getMatrices(){
+		//todo getter for matrices
+		return null;
+	}
+
+	private void serializeMatrices(){
+		//todo serialize matrices
+		try {
+			ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(MATRICES_FILE));
+			outStream.writeObject(matricesList);
+		} catch (IOException e) {
+		}
+	}
+
+	private void deserializeMatrices(int option){
+		ArrayList<Matrix> newMatrices = null;
+		try {
+			ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(MATRICES_FILE));
+			Object arr = inStream.readObject();
+			if (arr instanceof ArrayList){
+				ArrayList tmpArr = (ArrayList) arr;
+				if (tmpArr.size() > 0 && tmpArr.get(0) instanceof Matrix)
+					newMatrices = (ArrayList<Matrix>) tmpArr;
+			}
+		} catch (IOException e){
+			System.out.println("File not found");
+			return;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		if (newMatrices == null) return;
+
+		if (option == OVERWRITE) {
+			matricesList = newMatrices;
+		}
+		else {
+			for (Matrix item : newMatrices) {
+				if (matricesList.contains(item)) continue;
+				matricesList.add(item);
+			}
+		}
+	}
+
 }

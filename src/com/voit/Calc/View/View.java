@@ -24,8 +24,10 @@ public class View {
 	private JFrame mainFrame;
 
 	private JPanel calcPanel;
-	private JPanel viewPanel;
+	private JPanel calcViewPanel;
 	private JPanel buttonsPanel;
+
+	private JPanel matrixPanel;
 
 	private JPanel graphPanel;
 
@@ -49,6 +51,7 @@ public class View {
 		this.controller = controller;
 
 		makeCalcPanel(model);
+		makeMatrixPanel(model);
 		makeGraphPanel(model);
 		makeAboutPanel();
 
@@ -135,11 +138,11 @@ public class View {
 		calcPanel.setLayout(new GridBagLayout());
 
 		if (model instanceof Model)
-			viewPanel = new ViewJPanel(model);
+			calcViewPanel = new ViewJPanel(model);
 		else if (model instanceof ModelOnDouble)
-			viewPanel = new ViewJPanelOnDouble(model);
+			calcViewPanel = new ViewJPanelOnDouble(model);
 		else
-			viewPanel = new JPanel(); //if none exist, create empty panel so the app doesn't crash
+			calcViewPanel = new JPanel(); //if none exist, create empty panel so the app doesn't crash
 
 		buttonsPanel = new SimpleCalcJPanel(model);
 
@@ -152,7 +155,7 @@ public class View {
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 0.5;
 		c.weighty = 0.1;
-		calcPanel.add(viewPanel, c);
+		calcPanel.add(calcViewPanel, c);
 
 		c = new GridBagConstraints();
 		c.gridheight = 1;
@@ -166,7 +169,12 @@ public class View {
 		calcPanel.add(buttonsPanel, c);
 	}
 
+	private void makeMatrixPanel(ModelInterface model){
+		matrixPanel = new MatrixJPanel(model);
+	}
+
 	private void makeGraphPanel(ModelInterface model){
+		//todo create graph panel
 		graphPanel = new JPanel();
 	}
 
@@ -220,6 +228,10 @@ public class View {
 		if (panel == null || title == null) return;
 		defaultView = panel;
 		defaultTitle = title;
+	}
+
+	private void loadDefaultView(){
+		//todo loading default view from file
 	}
 
 	private void refresh(){

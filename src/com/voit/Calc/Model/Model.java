@@ -334,7 +334,7 @@ public class Model implements ModelInterface, ModelObservable {
 		for (int i=0; i<observers.size(); i++){
 			observers.get(i).update();
 		}
-		showDebug(); //todo comment
+//		showDebug();
 	}
 
 	//Helper methods

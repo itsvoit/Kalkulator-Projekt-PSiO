@@ -123,7 +123,7 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		}
 	}
 
-	protected void setOperation(int option){ //todo set image based on current operation
+	protected void setOperation(int option){
 		switch (option){
 			case ModelInterface.ADD:
 				operationImg.setText("+");

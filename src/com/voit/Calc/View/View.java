@@ -10,13 +10,22 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class View {
 	//Constants
+	private final String INI_FILE = "view_ini.txt";
+	private final int INI_LINES = 1;
 	private final String APP_NAME = "Calculator";
 	private final int FRAME_X = 500;
 	private final int FRAME_Y = 600;
 	private String aboutMessage;
+
+	private final int DEFAULT_CALC = 0;
+	private final int DEFAULT_MATRIX = 1;
+	private final int DEFAULT_GRAPH = 2;
 
 	//Fields
 	private ControllerInterface controller;
@@ -230,8 +239,51 @@ public class View {
 		defaultTitle = title;
 	}
 
-	private void loadDefaultView(){
+	private void setDefaultView(int option){
+		switch (option){
+			case DEFAULT_CALC:
+				setDefaultView(calcPanel, "Calculator");
+				break;
+			case DEFAULT_MATRIX:
+				setDefaultView(matrixPanel, "Matrix calculator");
+				break;
+			case DEFAULT_GRAPH:
+				setDefaultView(graphPanel, "Graphs");
+				break;
+			default:
+				System.out.println("Not a valid option: " + option + "\nUsing default instead...");
+				setDefaultView(0);
+		}
+	}
+
+	private void loadIniValues(){
 		//todo loading default view from file
+		try (BufferedReader reader = new BufferedReader(new FileReader(INI_FILE))){
+			for (int i = 0; i < INI_LINES; i++) {
+				String line = reader.readLine();
+				switch (i) {
+					case 0 :
+						line = line.trim();
+						int x = Integer.parseInt(line);
+						setDefaultView(x);
+						break;
+
+					case 1:
+						//todo expand ini file
+						break;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e){
+			e.printStackTrace();
+			System.out.println("couldn't use ini, using default values instead...");
+			setDefaultView(0);
+		}
+	}
+
+	private void updateIniValues(){
+		//todo update ini file
 	}
 
 	private void refresh(){

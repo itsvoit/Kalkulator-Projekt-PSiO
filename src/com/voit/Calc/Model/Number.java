@@ -50,8 +50,8 @@ public class Number implements NumberInterface, Cloneable{
 	public void setValue(double value){
 		intVal = (int) value;
 		intLen = getLen(intVal);
-		System.out.println("==========================="); //todo comment
-		System.out.printf("SET VALUE\nval: %f\nintVal: %d\n", value, intVal);
+//		System.out.println("===========================");
+//		System.out.printf("SET VALUE\nval: %f\nintVal: %d\n", value, intVal);
 
 		negative = intVal < 0;
 
@@ -71,10 +71,10 @@ public class Number implements NumberInterface, Cloneable{
 
 		fractionVal = fractionLong;
 		fractionLen = len;
-		System.out.println("fraction len: " + len); //todo comment
-
-		System.out.printf("fraction: %f\nf long: %d\ngetVal: %f\n", fractionPart, fractionLong, getValue());
-		System.out.println("===========================");
+//		System.out.println("fraction len: " + len);
+//
+//		System.out.printf("fraction: %f\nf long: %d\ngetVal: %f\n", fractionPart, fractionLong, getValue());
+//		System.out.println("===========================");
 
 		fractional = fractionVal != 0; //fractionVal != 0 ==> fractional = true
 	}

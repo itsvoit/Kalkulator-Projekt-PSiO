@@ -12,7 +12,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 
-public class ViewJPanel extends JPanel implements ModelObserver {
+public class CalcViewJPanel extends JPanel implements ModelObserver {
 
 	private final int H_GAP = 5;
 	private final int V_GAP = 5;
@@ -27,7 +27,7 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	private JTextPane yField;
 
 	//use model to register observers
-	public ViewJPanel(ModelInterface model){
+	public CalcViewJPanel(ModelInterface model){
 		super();
 		ModelObservable modelObservable = (ModelObservable) model;
 		modelObservable.registerObserver(this);

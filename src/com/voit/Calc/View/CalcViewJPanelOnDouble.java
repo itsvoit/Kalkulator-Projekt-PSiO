@@ -4,8 +4,8 @@ import com.voit.Calc.Model.ModelInterface;
 import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
 import com.voit.Calc.Model.NumberInterface;
 
-public class ViewJPanelOnDouble extends ViewJPanel{
-    public ViewJPanelOnDouble(ModelInterface model) {
+public class CalcViewJPanelOnDouble extends CalcViewJPanel {
+    public CalcViewJPanelOnDouble(ModelInterface model) {
         super(model);
     }
 

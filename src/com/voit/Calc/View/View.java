@@ -196,7 +196,7 @@ public class View {
 	}
 
 	private void makeMatrixPanel(ModelInterface model){
-		matrixPanel = new MatrixJPanel(model);
+		matrixPanel = new MatrixJPanel(model, controller);
 
 	}
 

@@ -1,6 +1,7 @@
 package com.voit.Calc.View;
 
-import com.voit.Calc.Controller.ButtonFunctions.*;
+import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
+import com.voit.Calc.Controller.ButtonFunctions.CalcButtons.*;
 import com.voit.Calc.Model.ModelInterface;
 
 import javax.swing.*;

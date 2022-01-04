@@ -164,9 +164,9 @@ public class View {
 		calcPanel.setLayout(new GridBagLayout());
 
 		if (model instanceof Model)
-			calcViewPanel = new ViewJPanel(model);
+			calcViewPanel = new CalcViewJPanel(model);
 		else if (model instanceof ModelOnDouble)
-			calcViewPanel = new ViewJPanelOnDouble(model);
+			calcViewPanel = new CalcViewJPanelOnDouble(model);
 		else
 			calcViewPanel = new JPanel(); //if none exist, create empty panel so the app doesn't crash
 

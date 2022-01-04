@@ -1,6 +1,5 @@
-package com.voit.Calc.Controller.ButtonFunctions.ComplexOperations;
+package com.voit.Calc.Controller.ButtonFunctions;
 
-import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
 import com.voit.Calc.Model.ModelInterface;
 
 public class ButtonOperationLog  implements ButtonFunctionInterface {

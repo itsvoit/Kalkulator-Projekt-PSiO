@@ -1,17 +1,18 @@
 package com.voit.Calc.View;
 
 import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
 import com.voit.Calc.Model.NumberInterface;
 
-public class ViewJPanelOnDouble extends ViewJPanel{
-    public ViewJPanelOnDouble(ModelInterface model) {
+public class CalcViewJPanelOnDouble extends CalcViewJPanel {
+    public CalcViewJPanelOnDouble(ModelInterface model) {
         super(model);
     }
 
-    public void update(){
-        NumberInterface x = model.getX();
-        NumberInterface y = model.getY();
-        NumberInterface memory = model.getMemory();
+    public void update(ModelUpdateEvent event){
+        NumberInterface x = event.getX();
+        NumberInterface y = event.getY();
+        NumberInterface memory = event.getMemory();
 
         String xString = getNumberString(x);
         if (xString.equals("")){
@@ -22,7 +23,7 @@ public class ViewJPanelOnDouble extends ViewJPanel{
         setYFieldText(getNumberString(y));
         setMemoryFieldText(getNumberString(memory));
 
-        setOperation(model.getOperation());
+        setOperation(event.getOperation());
     }
 
     private String getNumberString(NumberInterface num){

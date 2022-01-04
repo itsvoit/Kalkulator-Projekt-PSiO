@@ -3,6 +3,7 @@ package com.voit.Calc.View;
 import com.voit.Calc.Model.ModelInterface;
 import com.voit.Calc.Model.ModelObservers.ModelObservable;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
+import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
 import com.voit.Calc.Model.NumberInterface;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 
-public class ViewJPanel extends JPanel implements ModelObserver {
+public class CalcViewJPanel extends JPanel implements ModelObserver {
 
 	private final int H_GAP = 5;
 	private final int V_GAP = 5;
@@ -25,12 +26,9 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	private JTextPane xField;
 	private JTextPane yField;
 
-	protected ModelInterface model;
-
 	//use model to register observers
-	public ViewJPanel(ModelInterface model){
+	public CalcViewJPanel(ModelInterface model){
 		super();
-		this.model = model;
 		ModelObservable modelObservable = (ModelObservable) model;
 		modelObservable.registerObserver(this);
 
@@ -91,12 +89,12 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	}
 
 	@Override
-	public void update() {
+	public void update(ModelUpdateEvent event) {
 //		System.out.println("Update");
-		NumberInterface x = model.getX();
-		NumberInterface y = model.getY();
-		NumberInterface memory = model.getMemory();
-		int operation = model.getOperation();
+		NumberInterface x = event.getX();
+		NumberInterface y = event.getY();
+		NumberInterface memory = event.getMemory();
+		int operation = event.getOperation();
 
 		setXFieldText(x.getString());
 		setYVal(y);
@@ -123,7 +121,7 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 		}
 	}
 
-	protected void setOperation(int option){ //todo set image based on current operation
+	protected void setOperation(int option){
 		switch (option){
 			case ModelInterface.ADD:
 				operationImg.setText("+");

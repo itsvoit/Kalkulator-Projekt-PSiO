@@ -10,37 +10,56 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class View {
 	//Constants
+	private final String INI_FILE = "view_ini.txt";
+	private final int INI_LINES = 1;
 	private final String APP_NAME = "Calculator";
 	private final int FRAME_X = 500;
 	private final int FRAME_Y = 600;
 	private String aboutMessage;
+
+	private final int DEFAULT_CALC = 0;
+	private final int DEFAULT_MATRIX = 1;
+	private final int DEFAULT_GRAPH = 2;
 
 	//Fields
 	private ControllerInterface controller;
 
 	private JFrame mainFrame;
 
+	//Calculator
 	private JPanel calcPanel;
-	private JPanel viewPanel;
+	private JPanel calcViewPanel;
 	private JPanel buttonsPanel;
 
+	//Matrix
+	private JPanel matrixPanel;
+
+	//Graph
 	private JPanel graphPanel;
 
+	//About
 	private JPanel aboutPanel;
 
+	//Default panel
 	private JPanel defaultView;
 	private String defaultTitle;
 
+	//Menu
 	private JMenuBar mainMenuBar;
 	private JMenu menuFile;
 	private JMenuItem fileCalc;
 	private JMenuItem fileGraph;
+	private JMenuItem fileMatrix;
 	private JMenuItem fileExit;
 	private JMenuItem menuAbout;
 
+	//Listeners for about
 	private WindowListener restoreViewWindowListener;
 	private WindowListener closeApp;
 
@@ -49,6 +68,7 @@ public class View {
 		this.controller = controller;
 
 		makeCalcPanel(model);
+		makeMatrixPanel(model);
 		makeGraphPanel(model);
 		makeAboutPanel();
 
@@ -103,6 +123,15 @@ public class View {
 		refresh();
 	}
 
+	public void showMatrix(){
+		mainFrame.getContentPane().removeAll();
+		mainFrame.getContentPane().add(matrixPanel);
+		mainFrame.setTitle("Matrix Calculator");
+		setDefaultView(matrixPanel, "Matrix Calculator");
+		setDefaultFrameValues();
+		refresh();
+	}
+
 	public void showAbout(){
 		if (mainFrame == null || aboutPanel == null) return;
 
@@ -135,11 +164,11 @@ public class View {
 		calcPanel.setLayout(new GridBagLayout());
 
 		if (model instanceof Model)
-			viewPanel = new ViewJPanel(model);
+			calcViewPanel = new CalcViewJPanel(model);
 		else if (model instanceof ModelOnDouble)
-			viewPanel = new ViewJPanelOnDouble(model);
+			calcViewPanel = new CalcViewJPanelOnDouble(model);
 		else
-			viewPanel = new JPanel(); //if none exist, create empty panel so the app doesn't crash
+			calcViewPanel = new JPanel(); //if none exist, create empty panel so the app doesn't crash
 
 		buttonsPanel = new SimpleCalcJPanel(model);
 
@@ -152,7 +181,7 @@ public class View {
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 0.5;
 		c.weighty = 0.1;
-		calcPanel.add(viewPanel, c);
+		calcPanel.add(calcViewPanel, c);
 
 		c = new GridBagConstraints();
 		c.gridheight = 1;
@@ -166,7 +195,13 @@ public class View {
 		calcPanel.add(buttonsPanel, c);
 	}
 
+	private void makeMatrixPanel(ModelInterface model){
+		matrixPanel = new MatrixJPanel(model);
+
+	}
+
 	private void makeGraphPanel(ModelInterface model){
+		//todo create graph panel
 		graphPanel = new JPanel();
 	}
 
@@ -185,6 +220,7 @@ public class View {
 		menuAbout = new JMenuItem("About");
 		fileCalc = new JMenuItem("Calculator");
 		fileGraph = new JMenuItem("Graph");
+		fileMatrix = new JMenuItem("Matrix");
 		fileExit = new JMenuItem("Exit");
 
 		mainMenuBar.add(menuFile);
@@ -192,12 +228,14 @@ public class View {
 
 		menuFile.add(fileCalc);
 		menuFile.add(fileGraph);
+		menuFile.add(fileMatrix);
 		menuFile.add(fileExit);
 
 		menuAbout.addActionListener(e -> showAbout());
 
 		fileCalc.addActionListener(e -> showCalc());
 		fileGraph.addActionListener(e -> showGraph());
+		fileGraph.addActionListener(e -> showMatrix());
 		fileExit.addActionListener(e -> System.exit(0));
 	}
 
@@ -220,6 +258,53 @@ public class View {
 		if (panel == null || title == null) return;
 		defaultView = panel;
 		defaultTitle = title;
+	}
+
+	private void setDefaultView(int option){
+		switch (option){
+			case DEFAULT_CALC:
+				setDefaultView(calcPanel, "Calculator");
+				break;
+			case DEFAULT_MATRIX:
+				setDefaultView(matrixPanel, "Matrix calculator");
+				break;
+			case DEFAULT_GRAPH:
+				setDefaultView(graphPanel, "Graphs");
+				break;
+			default:
+				System.out.println("Not a valid option: " + option + "\nUsing default instead...");
+				setDefaultView(0);
+		}
+	}
+
+	private void loadIniValues(){
+		//todo loading default view from file
+		try (BufferedReader reader = new BufferedReader(new FileReader(INI_FILE))){
+			for (int i = 0; i < INI_LINES; i++) {
+				String line = reader.readLine();
+				switch (i) {
+					case 0 :
+						line = line.trim();
+						int x = Integer.parseInt(line);
+						setDefaultView(x);
+						break;
+
+					case 1:
+						//todo expand ini file
+						break;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e){
+			e.printStackTrace();
+			System.out.println("couldn't use ini, using default values instead...");
+			setDefaultView(0);
+		}
+	}
+
+	private void updateIniValues(){
+		//todo update ini file
 	}
 
 	private void refresh(){

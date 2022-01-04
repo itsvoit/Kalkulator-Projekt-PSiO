@@ -1,5 +1,7 @@
 package com.voit.Calc.Model;
 
+import java.util.ArrayList;
+
 public interface ModelInterface {
 	// Operations:
 	// 0 - add
@@ -20,6 +22,10 @@ public interface ModelInterface {
 	NumberInterface getY();
 	NumberInterface getMemory();
 	int getOperation();
+
+	Matrix getMatrix1();
+	Matrix getMatrix2();
+	ArrayList<Matrix> getMatrices();
 
 	void appendNumber(int value);
 	void deductNumber();

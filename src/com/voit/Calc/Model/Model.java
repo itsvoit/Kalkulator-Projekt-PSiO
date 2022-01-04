@@ -2,6 +2,7 @@ package com.voit.Calc.Model;
 
 import com.voit.Calc.Model.ModelObservers.ModelObservable;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
+import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -54,6 +55,16 @@ public class Model implements ModelInterface, ModelObservable {
 			}
 
 		return operation;
+	}
+
+	@Override
+	public Matrix getMatrix1() {
+		return matrix1;
+	}
+
+	@Override
+	public Matrix getMatrix2() {
+		return matrix2;
 	}
 
 	//Calculator operations
@@ -331,8 +342,9 @@ public class Model implements ModelInterface, ModelObservable {
 
 	public void notifyObservers() {
 //		System.out.println("Notify observers");
+		ModelUpdateEvent event = new ModelUpdateEvent(this);
 		for (int i=0; i<observers.size(); i++){
-			observers.get(i).update();
+			observers.get(i).update(event);
 		}
 //		showDebug();
 	}

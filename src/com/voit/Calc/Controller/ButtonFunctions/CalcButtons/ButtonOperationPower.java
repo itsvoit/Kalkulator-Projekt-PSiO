@@ -1,5 +1,6 @@
-package com.voit.Calc.Controller.ButtonFunctions;
+package com.voit.Calc.Controller.ButtonFunctions.CalcButtons;
 
+import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
 import com.voit.Calc.Model.ModelInterface;
 
 public class ButtonOperationPower implements ButtonFunctionInterface {

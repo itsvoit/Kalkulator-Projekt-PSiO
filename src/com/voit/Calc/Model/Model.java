@@ -400,7 +400,7 @@ public class Model implements ModelInterface, ModelObservable {
 		return null;
 	}
 
-	private void serializeMatrices(){
+	public void serializeMatrices(){
 		//todo serialize matrices
 		try {
 			ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(MATRICES_FILE));
@@ -409,7 +409,7 @@ public class Model implements ModelInterface, ModelObservable {
 		}
 	}
 
-	private void deserializeMatrices(int option){
+	public void deserializeMatrices(int option){
 		ArrayList<Matrix> newMatrices = null;
 		try {
 			ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(MATRICES_FILE));

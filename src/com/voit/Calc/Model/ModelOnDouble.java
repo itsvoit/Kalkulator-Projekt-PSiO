@@ -318,8 +318,6 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
     Matrix matrix2;
     ArrayList<Matrix> matricesList;
 
-
-
     public Matrix getMatrix1() {
         return matrix1;
     }
@@ -332,8 +330,7 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
         return matricesList;
     }
 
-    private void serializeMatrices(){
-        //todo serialize matrices
+    public void serializeMatrices(){
         try {
             ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(MATRICES_FILE));
             outStream.writeObject(matricesList);
@@ -341,7 +338,7 @@ public class ModelOnDouble implements ModelInterface, ModelObservable {
         }
     }
 
-    private void deserializeMatrices(int option){
+    public void deserializeMatrices(int option){
         ArrayList<Matrix> newMatrices = null;
         try {
             ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(MATRICES_FILE));

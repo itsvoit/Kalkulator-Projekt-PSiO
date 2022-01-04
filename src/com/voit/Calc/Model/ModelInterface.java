@@ -55,4 +55,6 @@ public interface ModelInterface {
 	void sqrt();
 	void log();
 
+	void serializeMatrices();
+	void deserializeMatrices(int o);
 }

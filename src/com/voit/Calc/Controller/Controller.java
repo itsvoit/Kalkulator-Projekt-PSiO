@@ -15,5 +15,11 @@ public class Controller implements ControllerInterface{
 		view.showFrame();
 	}
 
+	public void serializeMatrices() {
+		model.serializeMatrices();
+	}
 
+	public void deserializeMatrices(int option) {
+		model.deserializeMatrices(option);
+	}
 }

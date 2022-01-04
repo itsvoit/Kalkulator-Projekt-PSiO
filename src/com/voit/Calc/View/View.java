@@ -32,26 +32,34 @@ public class View {
 
 	private JFrame mainFrame;
 
+	//Calculator
 	private JPanel calcPanel;
 	private JPanel calcViewPanel;
 	private JPanel buttonsPanel;
 
+	//Matrix
 	private JPanel matrixPanel;
 
+	//Graph
 	private JPanel graphPanel;
 
+	//About
 	private JPanel aboutPanel;
 
+	//Default panel
 	private JPanel defaultView;
 	private String defaultTitle;
 
+	//Menu
 	private JMenuBar mainMenuBar;
 	private JMenu menuFile;
 	private JMenuItem fileCalc;
 	private JMenuItem fileGraph;
+	private JMenuItem fileMatrix;
 	private JMenuItem fileExit;
 	private JMenuItem menuAbout;
 
+	//Listeners for about
 	private WindowListener restoreViewWindowListener;
 	private WindowListener closeApp;
 
@@ -111,6 +119,15 @@ public class View {
 		mainFrame.getContentPane().add(graphPanel);
 		mainFrame.setTitle("Graph");
 		setDefaultView(graphPanel, "Graph");
+		setDefaultFrameValues();
+		refresh();
+	}
+
+	public void showMatrix(){
+		mainFrame.getContentPane().removeAll();
+		mainFrame.getContentPane().add(matrixPanel);
+		mainFrame.setTitle("Matrix Calculator");
+		setDefaultView(matrixPanel, "Matrix Calculator");
 		setDefaultFrameValues();
 		refresh();
 	}
@@ -180,6 +197,7 @@ public class View {
 
 	private void makeMatrixPanel(ModelInterface model){
 		matrixPanel = new MatrixJPanel(model);
+
 	}
 
 	private void makeGraphPanel(ModelInterface model){
@@ -202,6 +220,7 @@ public class View {
 		menuAbout = new JMenuItem("About");
 		fileCalc = new JMenuItem("Calculator");
 		fileGraph = new JMenuItem("Graph");
+		fileMatrix = new JMenuItem("Matrix");
 		fileExit = new JMenuItem("Exit");
 
 		mainMenuBar.add(menuFile);
@@ -209,12 +228,14 @@ public class View {
 
 		menuFile.add(fileCalc);
 		menuFile.add(fileGraph);
+		menuFile.add(fileMatrix);
 		menuFile.add(fileExit);
 
 		menuAbout.addActionListener(e -> showAbout());
 
 		fileCalc.addActionListener(e -> showCalc());
 		fileGraph.addActionListener(e -> showGraph());
+		fileGraph.addActionListener(e -> showMatrix());
 		fileExit.addActionListener(e -> System.exit(0));
 	}
 

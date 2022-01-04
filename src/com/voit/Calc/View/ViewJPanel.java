@@ -3,6 +3,7 @@ package com.voit.Calc.View;
 import com.voit.Calc.Model.ModelInterface;
 import com.voit.Calc.Model.ModelObservers.ModelObservable;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
+import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
 import com.voit.Calc.Model.NumberInterface;
 
 import javax.swing.*;
@@ -25,12 +26,9 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	private JTextPane xField;
 	private JTextPane yField;
 
-	protected ModelInterface model;
-
 	//use model to register observers
 	public ViewJPanel(ModelInterface model){
 		super();
-		this.model = model;
 		ModelObservable modelObservable = (ModelObservable) model;
 		modelObservable.registerObserver(this);
 
@@ -91,12 +89,12 @@ public class ViewJPanel extends JPanel implements ModelObserver {
 	}
 
 	@Override
-	public void update() {
+	public void update(ModelUpdateEvent event) {
 //		System.out.println("Update");
-		NumberInterface x = model.getX();
-		NumberInterface y = model.getY();
-		NumberInterface memory = model.getMemory();
-		int operation = model.getOperation();
+		NumberInterface x = event.getX();
+		NumberInterface y = event.getY();
+		NumberInterface memory = event.getMemory();
+		int operation = event.getOperation();
 
 		setXFieldText(x.getString());
 		setYVal(y);

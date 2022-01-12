@@ -17,11 +17,11 @@ public class Controller implements CalcControllerInterface, MatrixControllerInte
 	private View view;
 
 	public Controller(ModelInterface model){
-		this.view = new View(this, model);
-
 		this.matrixModel = (MatrixModelInterface) model;
 		this.calcModel = (CalcModelInterface) model;
 		this.classifModel = (ClassifModelInterface) model;
+
+		this.view = new View(this, model);
 
 		view.makeGUI();
 		view.showFrame();
@@ -51,6 +51,6 @@ public class Controller implements CalcControllerInterface, MatrixControllerInte
 	//Classification Controller
 
 	public String[] getAlgorithmsList() {
-		return null;
+		return classifModel.getAlgorithmsList();
 	}
 }

@@ -394,5 +394,10 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
         }
     }
 
+    //-------------------------------------------------------
+    //---------------- Data classification ------------------
 
+    public String[] getAlgorithmsList() {
+        return algorithms;
+    }
 }

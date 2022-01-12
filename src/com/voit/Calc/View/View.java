@@ -31,6 +31,10 @@ public class View {
 	private ControllerInterface controller;
 
 	private JFrame mainFrame;
+	private int defaultFrameSizeX;
+	private int defaultFrameSizeY;
+	private String defaultTitle;
+	private JPanel defaultView;
 
 	//Calculator
 	private JPanel calcPanel;
@@ -91,6 +95,9 @@ public class View {
 		mainFrame = new JFrame(APP_NAME);
 		showCalc(); //on default show calc; todo make app remember last used view and show it instead
 		defaultView = calcPanel;
+		defaultFrameSizeX = FRAME_X_CALC;
+		defaultFrameSizeY = FRAME_Y_CALC;
+		defaultTitle = "Calculator";
 
 		setDefaultFrameValues();
 
@@ -106,9 +113,8 @@ public class View {
 
 		mainFrame.getContentPane().removeAll();
 		mainFrame.getContentPane().add(calcPanel);
-		mainFrame.setTitle("Calculator");
 		setDefaultView(calcPanel, "Calculator");
-		setDefaultFrameValues();
+		setDefaultFrameValues(FRAME_X_CALC, FRAME_Y_CALC);
 		refresh();
 	}
 
@@ -128,7 +134,7 @@ public class View {
 		mainFrame.getContentPane().add(matrixPanel);
 		mainFrame.setTitle("Matrix Calculator");
 		setDefaultView(matrixPanel, "Matrix Calculator");
-		setDefaultFrameValues();
+		setDefaultFrameValues(FRAME_X_MATRIX, FRAME_Y_MATRIX);
 		refresh();
 	}
 
@@ -145,7 +151,7 @@ public class View {
 
 	public void showDefaultView(){
 		showPanel(defaultView, defaultTitle);
-		setDefaultFrameValues();
+		setDefaultFrameValues(defaultFrameSizeX, defaultFrameSizeY);
 	}
 
 	private void showPanel(JPanel panel, String title){
@@ -245,10 +251,13 @@ public class View {
 		return message;
 	}
 
-	private void setDefaultFrameValues(){
+	private void setDefaultFrameValues(int x, int y){
+		defaultFrameSizeX = x;
+		defaultFrameSizeY = y;
 		mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		mainFrame.setSize(new Dimension(FRAME_X, FRAME_Y));
-		mainFrame.setMinimumSize(new Dimension(FRAME_X, FRAME_Y));
+		mainFrame.setMinimumSize(new Dimension(x, y));
+		mainFrame.setPreferredSize(new Dimension(x, y));
+		mainFrame.pack();
 		mainFrame.setResizable(false);
 		mainFrame.removeWindowListener(restoreViewWindowListener);
 		mainFrame.addWindowListener(closeApp);

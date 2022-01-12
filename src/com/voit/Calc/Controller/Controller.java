@@ -22,4 +22,16 @@ public class Controller implements ControllerInterface{
 	public void deserializeMatrices(int option) {
 		model.deserializeMatrices(option);
 	}
+
+	public String[] getMatricesNames() {
+		return model.getMatricesNames();
+	}
+
+	public Matrix getMatrix(int x){
+		return model.getMatrix(x);
+	}
+
+	public void saveMatrix(Matrix m) {
+		model.addMatrix(m);
+	}
 }

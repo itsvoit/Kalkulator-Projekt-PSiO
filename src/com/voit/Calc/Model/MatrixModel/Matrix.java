@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Matrix implements Serializable {
+public class Matrix implements Serializable, Cloneable {
 	private int width;
 	private int height;
 	private double[][] matrix;
+	private String name; //todo implement name functionality
 
 	public Matrix (int width, int height){
 		if (width <= 0) width = 1;
@@ -61,6 +62,14 @@ public class Matrix implements Serializable {
 		matrix[x][y] = val;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	private void checkIndices(int x, int y) throws IndexOutOfBoundsException{
 		if (x >= this.width && y >= this.height) throw new IndexOutOfBoundsException("Indices are out of bounds");
 		else if (x >= this.width) throw new IndexOutOfBoundsException("X index is out of bounds");
@@ -82,5 +91,19 @@ public class Matrix implements Serializable {
 		int result = Objects.hash(width, height);
 		result = 31 * result + Arrays.deepHashCode(matrix);
 		return result;
+	}
+
+	@Override
+	public Matrix clone() {
+		try {
+			Matrix clone = (Matrix) super.clone();
+			clone.setMatrix(matrix.clone());
+			clone.height = height;
+			clone.width = width;
+			clone.setName(this.getName());
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError();
+		}
 	}
 }

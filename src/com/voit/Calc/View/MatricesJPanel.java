@@ -17,23 +17,31 @@ public class MatrixJPanel extends JPanel implements ModelObserver {
 	private final int H_GAP = 5;
 	private final int V_GAP = 5;
 
+	private final Font DIM_FONT = new Font("TimesRoman", Font.BOLD, 15);
+	private final Font BUTTON_FONT = new Font("TimesRoman", Font.BOLD, 14);
+
 	private ControllerInterface controller;
 
-	JPanel matrix1;
-	JPanel matrix2;
+	private JPanel matrix1;
+	private JPanel matrix2;
 
 	public MatrixJPanel(ModelInterface model, ControllerInterface controller){
 		this.controller = controller;
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		makeMatrices();
 
 	}
 
 	private void makeMatrices(){
+		JPanel centerPanel = new JPanel();
 		matrix1 = new InnerMatrixPanel();
 		matrix2 = new InnerMatrixPanel();
-		this.add(matrix1);
-		this.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
-		this.add(matrix2);
+		centerPanel.add(matrix1);
+		centerPanel.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
+		centerPanel.add(matrix2);
+		this.add(Box.createVerticalGlue());
+		this.add(centerPanel);
+		this.add(Box.createVerticalGlue());
 	}
 
 	private void loadMatrices(int option){
@@ -71,25 +79,30 @@ public class MatrixJPanel extends JPanel implements ModelObserver {
 			makeBottomButtons();
 
 			this.add(topButtons);
+			this.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
 			this.add(matrixPanel);
+			this.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
 			this.add(bottomButtons);
 		}
 
 		private void makeTopButtons(){
 			topButtons = new JPanel();
 			topButtons.setLayout(new BoxLayout(topButtons, BoxLayout.X_AXIS));
-			comboBox = new JComboBox<>();
+			comboBox = new JComboBox<>(controller.getMatricesNames());
 			comboBox.addItemListener(e -> {
 				//todo itemstate change for combo box in inner matrix
 			});
 
 			width = new JTextField();
 			height = new JTextField();
-			dimButton = new JButton("OK");
-			dimButton.addActionListener(e -> saveDimension());
-
+			width.setFont(DIM_FONT);
+			height.setFont(DIM_FONT);
 			prepareDimJTextField(width);
 			prepareDimJTextField(height);
+
+			dimButton = new JButton("OK");
+			dimButton.addActionListener(e -> saveDimension());
+			dimButton.setFont(BUTTON_FONT);
 
 			topButtons.add(comboBox);
 			topButtons.add(width);
@@ -102,6 +115,8 @@ public class MatrixJPanel extends JPanel implements ModelObserver {
 			int y = Integer.parseInt(height.getText());
 
 			matrixPanel.changeDimensions(x, y);
+			System.out.println("New dimensions: " + x + ", " + y);
+			refresh();
 		}
 
 		private void makeBottomButtons(){
@@ -112,26 +127,32 @@ public class MatrixJPanel extends JPanel implements ModelObserver {
 			saveButton = new JButton("Save");
 			clearButton = new JButton("Clear");
 
+			loadButton.setFont(BUTTON_FONT);
+			saveButton.setFont(BUTTON_FONT);
+			clearButton.setFont(BUTTON_FONT);
+
 			loadButton.addActionListener(e -> {
-				Object selectedItem = comboBox.getSelectedItem();
-				//todo get matrix from selected item in combo box
-				matrixPanel.loadMatrix(null); //switch with correct item
+				int index = comboBox.getSelectedIndex();
+				matrixPanel.loadMatrix(controller.getMatrix(index));
 			});
 
 			saveButton.addActionListener(e -> {
 				Matrix savedMatrix = matrixPanel.saveMatrix();
-				//todo do something with saved matrix
+				controller.saveMatrix(savedMatrix);
 			});
 
 			clearButton.addActionListener(e -> matrixPanel.clearMatrix());
 
 			bottomButtons.add(loadButton);
+			bottomButtons.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
 			bottomButtons.add(saveButton);
+			bottomButtons.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
 			bottomButtons.add(clearButton);
 		}
 
 		private void prepareDimJTextField(JTextField field){
-			field.setText("1");
+			field.setText("3");
+			field.setHorizontalAlignment(SwingConstants.CENTER);
 			field.setOpaque(false);
 			field.setBorder(BorderFactory.createEmptyBorder());
 			field.setEditable(true);
@@ -141,21 +162,33 @@ public class MatrixJPanel extends JPanel implements ModelObserver {
 					super.focusLost(e);
 
 					if (field.getText().matches(".*[a-z].*")){
-						field.setText("1");
+						field.setText("3");
 					} else {
 						double tmp = 0;
 						try {
 							tmp = Double.parseDouble(field.getText());
 						} catch (Exception ex){
-							field.setText("1");
+							field.setText("3");
 						}
 						int val = (int) tmp;
 						if (val > 0 && val < MAX_DIMENSION){
 							field.setText(Integer.toString(val));
-						} else field.setText("1");
+						} else field.setText("3");
 					}
 				}
+
+				@Override
+				public void focusGained(FocusEvent e){
+					super.focusGained(e);
+
+					field.setText("");
+				}
 			});
+		}
+
+		private void refresh(){
+			this.revalidate();
+			this.repaint();
 		}
 
 	}

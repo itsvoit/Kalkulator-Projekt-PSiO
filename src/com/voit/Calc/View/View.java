@@ -1,12 +1,13 @@
 package com.voit.Calc.View;
 
-import com.voit.Calc.Controller.ControllerInterfaces.CalcControllerInterface;
+import com.voit.Calc.Controller.Controller;
 import com.voit.Calc.Controller.ControllerInterfaces.MatrixControllerInterface;
 import com.voit.Calc.Model.Model;
 import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 import com.voit.Calc.Model.ModelInterfaces.ClassifModelInterface;
 import com.voit.Calc.Model.ModelInterfaces.MatrixModelInterface;
 import com.voit.Calc.Model.ModelInterfaces.ModelInterface;
+import com.voit.Calc.View.Customs.MyCustomScrollPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ public class View {
 	private final int FRAME_X_MATRIX = 600;
 	private final int FRAME_Y_MATRIX = 450;
 	private final int FRAME_X_CLASSIF = 800;
-	private final int FRAME_Y_CLASSIF = 400;
+	private final int FRAME_Y_CLASSIF = 1000;
 	private String aboutMessage;
 
 	private final int DEFAULT_CALC = 0;
@@ -35,7 +36,7 @@ public class View {
 	private final int DEFAULT_CLASSIF = 2;
 
 	//Fields
-	private CalcControllerInterface controller;
+	private Controller controller;
 
 	private JFrame mainFrame;
 	private int defaultFrameSizeX;
@@ -71,7 +72,7 @@ public class View {
 	private WindowListener closeApp;
 
 	//use model to register observers
-	public View(CalcControllerInterface controller, ModelInterface model){
+	public View(Controller controller, ModelInterface model){
 		this.controller = controller;
 
 		makeCalcPanel((CalcModelInterface) model);
@@ -125,7 +126,7 @@ public class View {
 		if (mainFrame == null || classiffPanel == null) return;
 
 		mainFrame.getContentPane().removeAll();
-		mainFrame.getContentPane().add(classiffPanel);
+		mainFrame.getContentPane().add(new MyCustomScrollPane(classiffPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
 		mainFrame.setTitle("Classification");
 		setDefaultView(classiffPanel, "Classification");
 		setDefaultFrameValues(FRAME_X_CLASSIF, FRAME_Y_CLASSIF);
@@ -209,7 +210,7 @@ public class View {
 
 	private void makeClassifPanel(ClassifModelInterface model){
 		//todo create classification panel
-		classiffPanel = new JPanel();
+		classiffPanel = new ClassificationJPanel(controller);
 
 	}
 

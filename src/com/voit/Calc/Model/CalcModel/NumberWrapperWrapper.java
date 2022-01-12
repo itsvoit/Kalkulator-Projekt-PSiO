@@ -1,18 +1,18 @@
-package com.voit.Calc.Model;
+package com.voit.Calc.Model.CalcModel;
 
-public class NumberDouble implements NumberInterface{
+public class NumberWrapperWrapper implements NumberWrapperInterface {
     private double value;
     private boolean fractional;
 
-    public NumberDouble(){
+    public NumberWrapperWrapper(){
         value = 0.0;
     }
 
-    public NumberDouble(double v){
+    public NumberWrapperWrapper(double v){
         setValue(v);
     }
 
-    public NumberDouble(double value, boolean fractional){
+    public NumberWrapperWrapper(double value, boolean fractional){
         this.value = value;
         this.fractional = fractional;
     }

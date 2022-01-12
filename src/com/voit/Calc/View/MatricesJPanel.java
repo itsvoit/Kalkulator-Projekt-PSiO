@@ -1,10 +1,10 @@
 package com.voit.Calc.View;
 
-import com.voit.Calc.Controller.ControllerInterface;
-import com.voit.Calc.Model.Matrix;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Controller.ControllerInterfaces.MatrixControllerInterface;
+import com.voit.Calc.Model.MatrixModel.Matrix;
+import com.voit.Calc.Model.ModelInterfaces.MatrixModelInterface;
+import com.voit.Calc.Model.ModelObservers.CalcModelUpdateEvent;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
-import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
 import com.voit.Calc.View.MatrixDisplay.MatrixDisplayPanel;
 
 import javax.swing.*;
@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class MatrixJPanel extends JPanel implements ModelObserver {
+public class MatricesJPanel extends JPanel implements ModelObserver {
 	private final int MAX_DIMENSION = 10;
 	private final int H_GAP = 5;
 	private final int V_GAP = 5;
@@ -20,16 +20,15 @@ public class MatrixJPanel extends JPanel implements ModelObserver {
 	private final Font DIM_FONT = new Font("TimesRoman", Font.BOLD, 15);
 	private final Font BUTTON_FONT = new Font("TimesRoman", Font.BOLD, 14);
 
-	private ControllerInterface controller;
+	private MatrixControllerInterface controller;
 
 	private JPanel matrix1;
 	private JPanel matrix2;
 
-	public MatrixJPanel(ModelInterface model, ControllerInterface controller){
+	public MatricesJPanel(MatrixModelInterface model, MatrixControllerInterface controller){
 		this.controller = controller;
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		makeMatrices();
-
 	}
 
 	private void makeMatrices(){
@@ -54,7 +53,7 @@ public class MatrixJPanel extends JPanel implements ModelObserver {
 	}
 
 	@Override
-	public void update(ModelUpdateEvent e) {
+	public void update(CalcModelUpdateEvent e) {
 		//todo update from model
 	}
 

@@ -1,442 +1,401 @@
 package com.voit.Calc.Model;
 
+import com.voit.Calc.Model.CalcModel.NumberWrapperInterface;
+import com.voit.Calc.Model.CalcModel.NumberWrapperWrapper;
+import com.voit.Calc.Model.MatrixModel.Matrix;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.ClassifModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.MatrixModelInterface;
+import com.voit.Calc.Model.ModelObservers.CalcModelUpdateEvent;
 import com.voit.Calc.Model.ModelObservers.ModelObservable;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
-import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class Model implements ModelInterface, ModelObservable {
-	private ArrayList<ModelObserver> observers;
-
-	ArrayList<String> history;
-
-	//Numbers
-	private Number memory;
-	private Number x;
-	private Number y;
-
-
-	private boolean[] operations;
-
-	private boolean initVal;
-
-	public Model(){
-		observers = new ArrayList<>();
-		history = new ArrayList<>();
-		operations = new boolean[N_OPERATIONS];
-		x = new Number();
-		y = new Number();
-		memory = new Number();
-		initVal = true;
-	}
-
-	//Getters
-
-	public Number getX() {
-		return x.clone();
-	}
-
-	public Number getY() {
-		return y.clone();
-	}
-
-	public Number getMemory() {
-		return memory.clone();
-	}
-
-	public int getOperation() {
-		int operation = NO_OP;
-		for (int i=0; i<operations.length; i++)
-			if (operations[i]) {
-				operation = i;
-				break;
-			}
-
-		return operation;
-	}
-
-	@Override
-	public Matrix getMatrix1() {
-		return matrix1;
-	}
-
-	@Override
-	public Matrix getMatrix2() {
-		return matrix2;
-	}
-
-	//Calculator operations
-
-	//todo check input-related functions
-	//Input operations
-	public void appendNumber(int value){
-		checkInitValue();
-		if (!x.fractional && x.intLen > 17) return;
-		if (x.fractional && x.fractionLen > 17) return;
-
-		if (!x.fractional && !x.negative) { //not fractional, not negative
-			x.intLen++;
-			x.intVal *= 10;
-			x.intVal += value;
-		}
-		else if (!x.negative){ //fractional, not negative
-			x.fractionLen++;
-			x.fractionVal *= 10;
-			x.fractionVal += value;
-		}
-		else if (!x.fractional){ //not fractional, negative
-			x.intLen++;
-			x.intVal *= 10;
-			x.intVal += value;
-		}
-		else{ //fractional, negative
-			x.fractionLen++;
-			x.fractionVal *= 10;
-			x.fractionVal += value;
-		}
-		notifyObservers();
-	}
-
-	public void deductNumber() {
-		checkInitValue();
-		if (!x.fractional && x.intLen == 0) return;
-
-		if (x.fractional && x.fractionLen == 0) {
-			x.fractional = false;
-		}
-		else if (x.fractional && x.fractionLen > 0){
-			x.fractionLen--;
-			x.fractionVal /= 10;
-		} else if (!x.fractional && x.intLen > 0) {
-			x.intLen--;
-			x.intVal /= 10;
-		}
-		notifyObservers();
-	}
-
-	public void comma() {
-		checkInitValue();
-		if (x.fractional) return;
-
-		x.fractional = true;
-		notifyObservers();
-	}
-
-	public void clear() {
-		x = new Number();
-		initVal = true;
-
-		notifyObservers();
-	}
-
-	public void clearAll() {
-		y = new Number();
-
-		clearOperations();
-		memory = new Number();
-
-		clear(); //notify is in clear
-	}
-
-	//todo check memory-related functions
-	//Memory operations
-	public void memoryClear() {
-		memory = new Number();
-		notifyObservers();
-	}
-
-	public void memoryRead() {
-		x = memory.clone();
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void memoryAdd() {
-		if (!memory.fractional && memory.intLen > 17) return;
-		if (memory.fractional && memory.fractionLen > 17) return;
-
-		double value = x.getValue() + memory.getValue();
-		memory.setValue(value);
-		notifyObservers();
-	}
-
-	public void memorySubtract() {
-		if (!memory.fractional && memory.intLen > 17) return;
-		if (memory.fractional && memory.fractionLen > 17) return;
-
-		double value = memory.getValue() - x.getValue();
-		memory.setValue(value);
-		notifyObservers();
-	}
-
-	public void memoryWrite() {
-		memory = x.clone();
-		notifyObservers();
-	}
-
-	//todo check simple operation-related functions
-	//Simple operations
-	public void add() {
-		if (getOperation() != -1) equals();
-		clearOperations();
-		operations[ADD] = true;
-		y = x.clone();
-		x = new Number();
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void subtract() {
-		if (getOperation() != -1) equals();
-		clearOperations();
-		operations[SUBTRACT] = true;
-		y = x.clone();
-		x = new Number();
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void multiply() {
-		if (getOperation() != -1) equals();
-		clearOperations();
-		operations[MULTIPLY] = true;
-		y = x.clone();
-		x = new Number();
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void divide() {
-		if (getOperation() != -1) equals();
-		clearOperations();
-		operations[DIVIDE] = true;
-		y = x.clone();
-		x = new Number();
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void negate() {
-		x.negative = !x.negative;
-//		initVal = false;
-		notifyObservers();
-	}
-
-	//todo check equals function
-	//Equals method
-	public void equals() {
-		int operation = -1;
-		operation += 1 + getOperation();
-		if (operation == -1) return;
-
-		double value = 0;
-
-		switch (operation){
-			case ADD:
-				value = x.getValue();
-				value += y.getValue();
-//				System.out.println(x.getValue());
-//				System.out.println(y.getValue());
-//				System.out.println(value);
-				x.setValue(value);
-				break;
-
-			case SUBTRACT:
-				value = y.getValue();
-				value -= x.getValue();
-				x.setValue(value);
-				break;
-
-			case MULTIPLY:
-				value = x.getValue();
-				value *= y.getValue();
-				x.setValue(value);
-				break;
-
-			case DIVIDE:
-				value = y.getValue();
-				if (x.getValue() == 0) return;
-
-				value /= x.getValue();
-				x.setValue(value);
-				break;
-
-			case POWER:
-				value = y.getValue();
-				value = Math.pow(value, x.getValue());
-				x.setValue(value);
-				break;
-		}
-		y = new Number();
-		initVal = false;
-		clearOperations();
-		notifyObservers();
-	}
-
-	//todo check complex operation-related functions
-	//Complex operations
-	public void percent() {
-		double value = x.getValue() / 100;
-		x.setValue(value);
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void reciprocal() {
-		if (x.getValue() == 0) return;
-
-		double value = Math.pow(x.getValue(), -1);
-		x.setValue(value);
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void power() {
-		if (getOperation() != -1) equals();
-		clearOperations();
-		operations[POWER] = true;
-		y = x.clone();
-		x = new Number();
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void power(int power) {
-		double value = Math.pow(x.getValue(), power);
-		x.setValue(value);
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void sqrt() {
-		if (x.getValue() < 0) return;
-
-		double value = Math.sqrt(x.getValue());
-		x.setValue(value);
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void log() {
-		if (x.getValue() <= 0) return;
-
-		double value = Math.log10(x.getValue());
-		x.setValue(value);
-		initVal = false;
-		notifyObservers();
-	}
-
-	public void registerObserver(ModelObserver o) {
-		if (observers.contains(o)) return;
-
-		observers.add(o);
-	}
-
-	public void removeObserver(ModelObserver o) {
-		if (!observers.contains(o)) return;
-
-		observers.remove(o);
-	}
-
-	public void notifyObservers() {
-//		System.out.println("Notify observers");
-		ModelUpdateEvent event = new ModelUpdateEvent(this);
-		for (int i=0; i<observers.size(); i++){
-			observers.get(i).update(event);
-		}
-//		showDebug();
-	}
-
-	//Helper methods
-
-	private void showDebug(){
-		System.out.println("------------------");
-		System.out.println("------------------");
-		showInfo(x, "X:");
-		System.out.println("------------------");
-		showInfo(y, "Y:");
-		System.out.println("------------------");
-		showInfo(memory, "Memory:");
-		System.out.println("------------------");
-	}
-
-	private void showInfo(Number num, String prompt){
-		System.out.println(prompt);
-		System.out.printf("value: %f\n", num.getValue());
-		System.out.printf("x int len: %d\n", num.intLen);
-		System.out.printf("x f len: %d\n", num.fractionLen);
-		System.out.printf("fractional: %b\nnegative: %b\n", num.fractional, num.negative);
-
-	}
-
-	private void clearOperations(){
-		for (int i=0; i<operations.length; i++) operations[i] = false;
-	}
-
-	private void checkInitValue(){
-		if (!initVal){
-			clear();
-			initVal = true;
-		}
-	}
-
-	//-------------------------------------------------------
-	//-------------------- Matrix calc ----------------------
-
-	//Constants
-	private final String MATRICES_FILE = "matrices.ser";
-	private final int OVERWRITE = 0;
-	private final int APPEND = 1;
-
-
-	Matrix matrix1;
-	Matrix matrix2;
-	ArrayList<Matrix> matricesList;
-
-	public ArrayList<Matrix> getMatrices(){
-		//todo getter for matrices
-		return null;
-	}
-
-	public void serializeMatrices(){
-		//todo serialize matrices
-		try {
-			ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(MATRICES_FILE));
-			outStream.writeObject(matricesList);
-		} catch (IOException e) {
-		}
-	}
-
-	public void deserializeMatrices(int option){
-		ArrayList<Matrix> newMatrices = null;
-		try {
-			ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(MATRICES_FILE));
-			Object arr = inStream.readObject();
-			if (arr instanceof ArrayList){
-				ArrayList tmpArr = (ArrayList) arr;
-				if (tmpArr.size() > 0 && tmpArr.get(0) instanceof Matrix)
-					newMatrices = (ArrayList<Matrix>) tmpArr;
-			}
-		} catch (IOException e){
-			System.out.println("File not found");
-			return;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		if (newMatrices == null) return;
-
-		if (option == OVERWRITE) {
-			matricesList = newMatrices;
-		}
-		else {
-			for (Matrix item : newMatrices) {
-				if (matricesList.contains(item)) continue;
-				matricesList.add(item);
-			}
-		}
-	}
-
+public class Model implements CalcModelInterface, MatrixModelInterface, ClassifModelInterface, ModelObservable {
+    private ArrayList<ModelObserver> observers;
+
+    private double xVal; //current number
+    private double yVal; //previous number
+    private double memoryVal;
+
+    private String xString; //for initial user input
+
+    private int intLen; //for bounding integer size
+    private int fractionLen; //for bounding fraction precision
+
+    private int operation;
+
+    //determines whether the x number is input by user or by operation
+    private boolean userInput;
+    private boolean comma;
+
+    public Model(){
+        userInput = true;
+        observers = new ArrayList<>();
+        xString = "";
+        operation = NO_OP;
+
+        matricesNamesList = new ArrayList<>();
+    }
+
+    //Getters
+    public NumberWrapperInterface getX() {
+        return new NumberWrapperWrapper(xVal, comma);
+    }
+
+    public NumberWrapperInterface getY() {
+        return new NumberWrapperWrapper(yVal);
+    }
+
+    public NumberWrapperInterface getMemory() {
+        return new NumberWrapperWrapper(memoryVal);
+    }
+
+    public int getOperation() {
+        return operation;
+    }
+
+    //Operations
+    public void appendNumber(int value) {
+        if (!userInput){
+            clear();
+        }
+        xString += value;
+        convertInput();
+        notifyObservers();
+    }
+
+    public void deductNumber() {
+        if (xString.length() == 0) return; //nothing to deduct
+
+        //if deducted comma
+        if (xString.charAt(xString.length()-1) == ','){
+            comma = false;
+        }
+        xString = xString.substring(0, xString.length()-1);
+        notifyObservers();
+    }
+
+    public void comma() {
+        if (comma) return; //comma exists
+        if (!userInput) return; //value in x is not user-generated
+        comma = true;
+        if (xString.equals("")) xString += "0"; //if "" we want to show "0." instead of "."
+        xString += ".";
+        notifyObservers();
+    }
+
+    public void clear() {
+        if (xVal == 0) {
+            yVal = 0;
+            memoryVal = 0;
+        }
+        xVal = 0;
+        xString = "";
+        comma = false;
+        userInput = true;
+        setOperation(NO_OP);
+
+        notifyObservers();
+    }
+
+    public void clearAll() {
+        xVal = 0;
+        xString = "";
+        clear();
+    }
+
+    public void memoryClear() {
+        memoryVal = 0;
+        notifyObservers();
+    }
+
+    public void memoryRead() {
+        xVal = memoryVal;
+        notifyObservers();
+    }
+
+    public void memoryAdd() {
+        convertInput();
+        memoryVal += xVal;
+        notifyObservers();
+    }
+
+    public void memorySubtract() {
+        convertInput();
+        memoryVal -= xVal;
+        notifyObservers();
+    }
+
+    public void memoryWrite() {
+        convertInput();
+        memoryVal = xVal;
+        notifyObservers();
+    }
+
+    public void add() {
+        convertInput();
+        setOperation(ADD);
+        notifyObservers();
+    }
+
+    public void subtract() {
+        convertInput();
+        setOperation(SUBTRACT);
+        notifyObservers();
+    }
+
+    public void multiply() {
+        convertInput();
+        setOperation(MULTIPLY);
+        notifyObservers();
+    }
+
+    public void divide() {
+        convertInput();
+        setOperation(DIVIDE);
+        notifyObservers();
+    }
+
+    public void negate() {
+        if (!userInput) return;
+        convertInput();
+        xVal *= -1;
+        xString = Double.toString(xVal);
+        int x = (int) xVal;
+        if (x == xVal) {
+            xString = xString.substring(0, xString.length() - 1); //delete the trailing 0
+            if (!comma) xString = xString.substring(0, xString.length() - 1); //delete comma sign
+        }
+
+        notifyObservers();
+    }
+
+    public void equals() {
+        convertInput();
+
+        switch (operation){
+            case ADD:
+                xVal += yVal;
+                break;
+
+            case SUBTRACT:
+                xVal = yVal - xVal;
+                break;
+
+            case MULTIPLY:
+                xVal *= yVal;
+                break;
+
+            case DIVIDE:
+                if (xVal == 0) return;
+                xVal = yVal / xVal;
+                break;
+
+            case POWER:
+                xVal = Math.pow(yVal, xVal);
+                break;
+
+            case NO_OP:
+                return;
+        }
+        setOperation(NO_OP);
+        userInput = false;
+        yVal = 0;
+        xString = "";
+        notifyObservers();
+    }
+
+    public void percent() {
+        userInput = false;
+        convertInput();
+        xVal /= 100;
+        notifyObservers();
+    }
+
+    public void reciprocal() {
+        userInput = false;
+        convertInput();
+        xVal = Math.pow(xVal, -1);
+        checkForComma();
+        notifyObservers();
+    }
+
+    public void power() {
+        convertInput();
+        setOperation(POWER);
+        notifyObservers();
+    }
+
+    public void power(int x) {
+        userInput = false;
+        convertInput();
+        xVal = Math.pow(xVal, x);
+        checkForComma();
+        notifyObservers();
+    }
+
+    public void sqrt() {
+        convertInput();
+        if (xVal < 0) return;
+        userInput = false;
+        xVal = Math.sqrt(xVal);
+        checkForComma();
+        notifyObservers();
+    }
+
+    public void log() {
+        convertInput();
+        if (xVal == 0) return;
+        userInput = false;
+        xVal = Math.log10(xVal);
+        checkForComma();
+        notifyObservers();
+    }
+
+    private void convertInput(){
+        if (userInput && !xString.equals("")) {
+            String returnString = xString;
+            if (xString.charAt(xString.length()-1) == '.'){
+                returnString = returnString.substring(0, returnString.length()-1);
+            }
+            if (!comma) xVal = Integer.parseInt(returnString);
+            else xVal = Double.parseDouble(returnString);
+//            System.out.println(xVal);
+        }
+    }
+
+    private void setOperation(int newOp){
+        if (newOp == NO_OP){
+            operation = NO_OP;
+            userInput = true;
+        }
+        if (newOp < ADD || newOp > POWER) return;
+
+        if (xVal != 0 && yVal != 0) equals();
+        operation = newOp;
+        userInput = true;
+
+        if (xVal == 0) return;
+
+        yVal = xVal;
+        xVal = 0;
+        comma = false;
+        xString = "";
+    }
+
+    private void checkForComma(){
+        int x = (int) xVal;
+        comma = x != xVal;
+    }
+
+    //Observable methods
+    @Override
+    public void registerObserver(ModelObserver o) {
+        if (o != null && !observers.contains(o)){
+            observers.add(o);
+        }
+    }
+
+    @Override
+    public void removeObserver(ModelObserver o) {
+        if (observers.contains(o)) {
+            observers.remove(o);
+        }
+    }
+
+    @Override
+    public void notifyObservers() {
+        CalcModelUpdateEvent event = new CalcModelUpdateEvent(this);
+        for (int i = 0; i < observers.size(); i++) {
+            observers.get(i).update(event);
+        }
+    }
+
+    //-------------------------------------------------------
+    //-------------------- Matrix calc ----------------------
+
+    //Constants
+    private final String MATRICES_FILE = "matrices.ser";
+    private final int OVERWRITE = 0;
+    private final int APPEND = 1;
+
+    private Matrix matrix1;
+    private Matrix matrix2;
+    private ArrayList<Matrix> matricesList;
+    private ArrayList<String> matricesNamesList;
+
+    public Matrix getMatrix1() {
+        return matrix1;
+    }
+
+    public Matrix getMatrix2() {
+        return matrix2;
+    }
+
+    public ArrayList<Matrix> getMatrices(){
+        return matricesList;
+    }
+
+    public String[] getMatricesNames(){
+        return matricesNamesList.toArray(new String[0]);
+    }
+
+    public Matrix getMatrix(int x){
+        return matricesList.get(x).clone();
+    }
+
+    public void addMatrix(Matrix m){
+        if (matricesList.contains(m)) return;
+
+        matricesList.add(m);
+        matricesNamesList.add(m.getName());
+    }
+
+    public void serializeMatrices(){
+        try {
+            ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(MATRICES_FILE));
+            outStream.writeObject(matricesList);
+        } catch (IOException e) {
+            System.out.println("couldn't serialize matrices"); //todo debug comment
+        }
+    }
+
+    public void deserializeMatrices(int option){
+        ArrayList<Matrix> newMatrices = null;
+        try {
+            ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(MATRICES_FILE));
+            //Deserialize Matrices
+            Object arr = inStream.readObject();
+            if (arr instanceof ArrayList){
+                ArrayList tmpArr = (ArrayList) arr;
+                if (tmpArr.size() > 0 && tmpArr.get(0) instanceof Matrix)
+                    newMatrices = (ArrayList<Matrix>) tmpArr;
+            }
+
+        } catch (IOException e){
+            System.out.println("File not found");
+            return;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (newMatrices == null) return;
+
+        if (option == OVERWRITE) {
+            matricesList = newMatrices;
+        }
+        else {
+            for (Matrix item : newMatrices) {
+                if (matricesList.contains(item)) continue;
+                matricesList.add(item);
+            }
+        }
+
+        for (int i = 0; i < matricesList.size(); i++) {
+            matricesNamesList.add(matricesList.get(i).getName());
+        }
+    }
 }

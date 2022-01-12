@@ -1,9 +1,12 @@
 package com.voit.Calc.View;
 
-import com.voit.Calc.Controller.ControllerInterface;
+import com.voit.Calc.Controller.ControllerInterfaces.CalcControllerInterface;
+import com.voit.Calc.Controller.ControllerInterfaces.MatrixControllerInterface;
 import com.voit.Calc.Model.Model;
-import com.voit.Calc.Model.ModelInterface;
-import com.voit.Calc.Model.ModelOnDouble;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.ClassifModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.MatrixModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.ModelInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,16 +22,20 @@ public class View {
 	private final String INI_FILE = "view_ini.txt";
 	private final int INI_LINES = 1;
 	private final String APP_NAME = "Calculator";
-	private final int FRAME_X = 500;
-	private final int FRAME_Y = 600;
+	private final int FRAME_X_CALC = 500;
+	private final int FRAME_Y_CALC = 600;
+	private final int FRAME_X_MATRIX = 600;
+	private final int FRAME_Y_MATRIX = 450;
+	private final int FRAME_X_CLASSIF = 800;
+	private final int FRAME_Y_CLASSIF = 400;
 	private String aboutMessage;
 
 	private final int DEFAULT_CALC = 0;
 	private final int DEFAULT_MATRIX = 1;
-	private final int DEFAULT_GRAPH = 2;
+	private final int DEFAULT_CLASSIF = 2;
 
 	//Fields
-	private ControllerInterface controller;
+	private CalcControllerInterface controller;
 
 	private JFrame mainFrame;
 	private int defaultFrameSizeX;
@@ -44,21 +51,17 @@ public class View {
 	//Matrix
 	private JPanel matrixPanel;
 
-	//Graph
-	private JPanel graphPanel;
+	//Data Classification
+	private JPanel classiffPanel;
 
 	//About
 	private JPanel aboutPanel;
-
-	//Default panel
-	private JPanel defaultView;
-	private String defaultTitle;
 
 	//Menu
 	private JMenuBar mainMenuBar;
 	private JMenu menuFile;
 	private JMenuItem fileCalc;
-	private JMenuItem fileGraph;
+	private JMenuItem fileClassif;
 	private JMenuItem fileMatrix;
 	private JMenuItem fileExit;
 	private JMenuItem menuAbout;
@@ -68,12 +71,12 @@ public class View {
 	private WindowListener closeApp;
 
 	//use model to register observers
-	public View(ControllerInterface controller, ModelInterface model){
+	public View(CalcControllerInterface controller, ModelInterface model){
 		this.controller = controller;
 
-		makeCalcPanel(model);
-		makeMatrixPanel(model);
-		makeGraphPanel(model);
+		makeCalcPanel((CalcModelInterface) model);
+		makeMatrixPanel((MatrixModelInterface)model);
+		makeClassifPanel((ClassifModelInterface)model);
 		makeAboutPanel();
 
 		closeApp = new WindowAdapter() {
@@ -99,7 +102,7 @@ public class View {
 		defaultFrameSizeY = FRAME_Y_CALC;
 		defaultTitle = "Calculator";
 
-		setDefaultFrameValues();
+		setDefaultFrameValues(defaultFrameSizeX, defaultFrameSizeY);
 
 		makeMenuBar();
 	}
@@ -118,14 +121,14 @@ public class View {
 		refresh();
 	}
 
-	public void showGraph(){
-		if (mainFrame == null || graphPanel == null) return;
+	public void showClassification(){
+		if (mainFrame == null || classiffPanel == null) return;
 
 		mainFrame.getContentPane().removeAll();
-		mainFrame.getContentPane().add(graphPanel);
-		mainFrame.setTitle("Graph");
-		setDefaultView(graphPanel, "Graph");
-		setDefaultFrameValues();
+		mainFrame.getContentPane().add(classiffPanel);
+		mainFrame.setTitle("Classification");
+		setDefaultView(classiffPanel, "Classification");
+		setDefaultFrameValues(FRAME_X_CLASSIF, FRAME_Y_CLASSIF);
 		refresh();
 	}
 
@@ -163,15 +166,13 @@ public class View {
 		refresh();
 	}
 
-	private void makeCalcPanel(ModelInterface model){
+	private void makeCalcPanel(CalcModelInterface model){
 		calcPanel = new JPanel();
 //		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
 		calcPanel.setLayout(new GridBagLayout());
 
 		if (model instanceof Model)
-			calcViewPanel = new CalcViewJPanel(model);
-		else if (model instanceof ModelOnDouble)
 			calcViewPanel = new CalcViewJPanelOnDouble(model);
 		else
 			calcViewPanel = new JPanel(); //if none exist, create empty panel so the app doesn't crash
@@ -201,14 +202,15 @@ public class View {
 		calcPanel.add(buttonsPanel, c);
 	}
 
-	private void makeMatrixPanel(ModelInterface model){
-		matrixPanel = new MatrixJPanel(model, controller);
+	private void makeMatrixPanel(MatrixModelInterface model){
+		matrixPanel = new MatricesJPanel(model, (MatrixControllerInterface) controller);
 
 	}
 
-	private void makeGraphPanel(ModelInterface model){
-		//todo create graph panel
-		graphPanel = new JPanel();
+	private void makeClassifPanel(ClassifModelInterface model){
+		//todo create classification panel
+		classiffPanel = new JPanel();
+
 	}
 
 	private void makeAboutPanel(){
@@ -225,7 +227,7 @@ public class View {
 		menuFile = new JMenu("File");
 		menuAbout = new JMenuItem("About");
 		fileCalc = new JMenuItem("Calculator");
-		fileGraph = new JMenuItem("Graph");
+		fileClassif = new JMenuItem("Data classification");
 		fileMatrix = new JMenuItem("Matrix");
 		fileExit = new JMenuItem("Exit");
 
@@ -233,15 +235,15 @@ public class View {
 		mainMenuBar.add(menuAbout);
 
 		menuFile.add(fileCalc);
-		menuFile.add(fileGraph);
+		menuFile.add(fileClassif);
 		menuFile.add(fileMatrix);
 		menuFile.add(fileExit);
 
 		menuAbout.addActionListener(e -> showAbout());
 
 		fileCalc.addActionListener(e -> showCalc());
-		fileGraph.addActionListener(e -> showGraph());
-		fileGraph.addActionListener(e -> showMatrix());
+		fileClassif.addActionListener(e -> showClassification());
+		fileMatrix.addActionListener(e -> showMatrix());
 		fileExit.addActionListener(e -> System.exit(0));
 	}
 
@@ -277,8 +279,8 @@ public class View {
 			case DEFAULT_MATRIX:
 				setDefaultView(matrixPanel, "Matrix calculator");
 				break;
-			case DEFAULT_GRAPH:
-				setDefaultView(graphPanel, "Graphs");
+			case DEFAULT_CLASSIF:
+				setDefaultView(classiffPanel, "Data Classification");
 				break;
 			default:
 				System.out.println("Not a valid option: " + option + "\nUsing default instead...");

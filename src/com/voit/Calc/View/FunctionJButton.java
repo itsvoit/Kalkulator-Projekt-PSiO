@@ -2,7 +2,7 @@ package com.voit.Calc.View;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
 import com.voit.Calc.Controller.ButtonFunctions.CalcButtons.*;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
  *
  * @implSpec Include correct strategy implementing ButtonFunctionInterface
  *
- * @see com.voit.Calc.Model.ModelInterface
+ * @see CalcModelInterface
  */
 public class FunctionJButton extends JButton implements ActionListener {
 	public static final int NONE = -1;
@@ -47,13 +47,13 @@ public class FunctionJButton extends JButton implements ActionListener {
 
 	ButtonFunctionInterface buttonFunction;
 
-	public FunctionJButton(int option, ModelInterface model){
+	public FunctionJButton(int option, CalcModelInterface model){
 		this.addActionListener(this);
 		this.setFont(new Font("TimesRoman", Font.BOLD, 18));
 		this.setOperation(option, model);
 	}
 
-	public FunctionJButton(int option, int value, ModelInterface model){
+	public FunctionJButton(int option, int value, CalcModelInterface model){
 		this.addActionListener(this);
 		this.setFont(new Font("TimesRoman", Font.BOLD, 18));
 		if (option == NUMBER)
@@ -62,7 +62,7 @@ public class FunctionJButton extends JButton implements ActionListener {
 			this.setOperation(option, model);
 	}
 
-	public void setOperation(int option, ModelInterface model){
+	public void setOperation(int option, CalcModelInterface model){
 		switch (option){
 			case ADD:
 				setButtonFunction(new ButtonOperationAdd(model));

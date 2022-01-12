@@ -1,12 +1,12 @@
 package com.voit.Calc.Controller.ButtonFunctions.CalcButtons;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 public class ButtonOperationMemoryWrite implements ButtonFunctionInterface {
-	private ModelInterface model;
+	private CalcModelInterface model;
 
-	public ButtonOperationMemoryWrite(ModelInterface model){
+	public ButtonOperationMemoryWrite(CalcModelInterface model){
 		this.model = model;
 	}
 

@@ -1,12 +1,12 @@
 package com.voit.Calc.Controller.ButtonFunctions.CalcButtons;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 public class ButtonOperationEquals implements ButtonFunctionInterface {
-	ModelInterface model;
+	CalcModelInterface model;
 
-	public ButtonOperationEquals(ModelInterface model){
+	public ButtonOperationEquals(CalcModelInterface model){
 		this.model = model;
 	}
 

@@ -1,8 +1,8 @@
-package com.voit.Calc.Model;
+package com.voit.Calc.Model.ModelInterfaces;
 
-import java.util.ArrayList;
+import com.voit.Calc.Model.CalcModel.NumberWrapperInterface;
 
-public interface ModelInterface {
+public interface CalcModelInterface extends ModelInterface {
 	// Operations:
 	// 0 - add
 	// 1 - subtract
@@ -18,14 +18,10 @@ public interface ModelInterface {
 	int DIVIDE = 3;
 	int POWER = 4;
 
-	NumberInterface getX();
-	NumberInterface getY();
-	NumberInterface getMemory();
+	NumberWrapperInterface getX();
+	NumberWrapperInterface getY();
+	NumberWrapperInterface getMemory();
 	int getOperation();
-
-	Matrix getMatrix1();
-	Matrix getMatrix2();
-	ArrayList<Matrix> getMatrices();
 
 	void appendNumber(int value);
 	void deductNumber();
@@ -55,6 +51,5 @@ public interface ModelInterface {
 	void sqrt();
 	void log();
 
-	void serializeMatrices();
-	void deserializeMatrices(int o);
+
 }

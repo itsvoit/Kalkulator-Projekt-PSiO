@@ -1,18 +1,18 @@
 package com.voit.Calc.View;
 
-import com.voit.Calc.Model.ModelInterface;
-import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
-import com.voit.Calc.Model.NumberInterface;
+import com.voit.Calc.Model.CalcModel.NumberWrapperInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
+import com.voit.Calc.Model.ModelObservers.CalcModelUpdateEvent;
 
 public class CalcViewJPanelOnDouble extends CalcViewJPanel {
-    public CalcViewJPanelOnDouble(ModelInterface model) {
+    public CalcViewJPanelOnDouble(CalcModelInterface model) {
         super(model);
     }
 
-    public void update(ModelUpdateEvent event){
-        NumberInterface x = event.getX();
-        NumberInterface y = event.getY();
-        NumberInterface memory = event.getMemory();
+    public void update(CalcModelUpdateEvent event){
+        NumberWrapperInterface x = event.getX();
+        NumberWrapperInterface y = event.getY();
+        NumberWrapperInterface memory = event.getMemory();
 
         String xString = getNumberString(x);
         if (xString.equals("")){
@@ -26,7 +26,7 @@ public class CalcViewJPanelOnDouble extends CalcViewJPanel {
         setOperation(event.getOperation());
     }
 
-    private String getNumberString(NumberInterface num){
+    private String getNumberString(NumberWrapperInterface num){
         String string = num.getString();
 
         if (string.equals("0")){

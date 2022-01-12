@@ -1,19 +1,19 @@
 package com.voit.Calc.Controller.ButtonFunctions.CalcButtons;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 public class ButtonOperationPower implements ButtonFunctionInterface {
-	ModelInterface model;
+	CalcModelInterface model;
 	int power;
 	String string;
 
-	public ButtonOperationPower(ModelInterface model){
+	public ButtonOperationPower(CalcModelInterface model){
 		this.model = model;
 		string = "x^y";
 	}
 
-	public ButtonOperationPower(ModelInterface model, int power){
+	public ButtonOperationPower(CalcModelInterface model, int power){
 		this(model);
 		this.power = power;
 		string = "x^" + power;

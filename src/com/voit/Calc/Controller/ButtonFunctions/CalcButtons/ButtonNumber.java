@@ -1,13 +1,13 @@
 package com.voit.Calc.Controller.ButtonFunctions.CalcButtons;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 public class ButtonNumber implements ButtonFunctionInterface {
 	private int value;
-	private ModelInterface model;
+	private CalcModelInterface model;
 
-	public ButtonNumber(int value, ModelInterface model){
+	public ButtonNumber(int value, CalcModelInterface model){
 		this.value = value;
 		this.model = model;
 	}

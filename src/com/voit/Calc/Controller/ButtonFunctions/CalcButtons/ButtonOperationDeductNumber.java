@@ -1,12 +1,12 @@
 package com.voit.Calc.Controller.ButtonFunctions.CalcButtons;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 public class ButtonOperationDeductNumber implements ButtonFunctionInterface {
-	ModelInterface model;
+	CalcModelInterface model;
 
-	public ButtonOperationDeductNumber(ModelInterface model){
+	public ButtonOperationDeductNumber(CalcModelInterface model){
 		this.model = model;
 	}
 

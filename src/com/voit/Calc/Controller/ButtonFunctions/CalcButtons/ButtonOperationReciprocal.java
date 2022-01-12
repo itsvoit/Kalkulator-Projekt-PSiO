@@ -1,12 +1,12 @@
 package com.voit.Calc.Controller.ButtonFunctions.CalcButtons;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 public class ButtonOperationReciprocal  implements ButtonFunctionInterface {
-	ModelInterface model;
+	CalcModelInterface model;
 
-	public ButtonOperationReciprocal(ModelInterface model){
+	public ButtonOperationReciprocal(CalcModelInterface model){
 		this.model = model;
 	}
 

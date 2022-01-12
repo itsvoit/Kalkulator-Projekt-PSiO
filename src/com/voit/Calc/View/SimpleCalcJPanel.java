@@ -1,6 +1,6 @@
 package com.voit.Calc.View;
 
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,14 +11,14 @@ public class SimpleCalcJPanel extends JPanel {
 	private final int V_GAP = 5;
 	private final int MAX_MEM_H = 50;
 
-	SimpleCalcJPanel(ModelInterface model){
+	SimpleCalcJPanel(CalcModelInterface model){
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		makeMemoryButtons(model);
 		makeFunctionButtons(model);
 	}
 
-	private void makeMemoryButtons(ModelInterface model){
+	private void makeMemoryButtons(CalcModelInterface model){
 		JPanel memoryPanel = new JPanel(new GridLayout(1, 5, H_GAP, V_GAP));
 
 		memoryPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, MAX_MEM_H));
@@ -32,7 +32,7 @@ public class SimpleCalcJPanel extends JPanel {
 		this.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
 	}
 
-	private void makeFunctionButtons(ModelInterface model){
+	private void makeFunctionButtons(CalcModelInterface model){
 		JPanel buttonsPanel = new JPanel(new GridLayout(5, 5, H_GAP, V_GAP));
 
 		buttonsPanel.add(new FunctionJButton(FunctionJButton.RECIPROCAL, model)); //Reciprocal

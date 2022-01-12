@@ -1,12 +1,12 @@
 package com.voit.Calc.Controller.ButtonFunctions.CalcButtons;
 
 import com.voit.Calc.Controller.ButtonFunctions.ButtonFunctionInterface;
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
 
 public class ButtonOperationMemorySubtract implements ButtonFunctionInterface {
-	private ModelInterface model;
+	private CalcModelInterface model;
 
-	public ButtonOperationMemorySubtract(ModelInterface model){
+	public ButtonOperationMemorySubtract(CalcModelInterface model){
 		this.model = model;
 	}
 

@@ -1,10 +1,10 @@
 package com.voit.Calc.View;
 
-import com.voit.Calc.Model.ModelInterface;
+import com.voit.Calc.Model.CalcModel.NumberWrapperInterface;
+import com.voit.Calc.Model.ModelInterfaces.CalcModelInterface;
+import com.voit.Calc.Model.ModelObservers.CalcModelUpdateEvent;
 import com.voit.Calc.Model.ModelObservers.ModelObservable;
 import com.voit.Calc.Model.ModelObservers.ModelObserver;
-import com.voit.Calc.Model.ModelObservers.ModelUpdateEvent;
-import com.voit.Calc.Model.NumberInterface;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -27,7 +27,7 @@ public class CalcViewJPanel extends JPanel implements ModelObserver {
 	private JTextPane yField;
 
 	//use model to register observers
-	public CalcViewJPanel(ModelInterface model){
+	public CalcViewJPanel(CalcModelInterface model){
 		super();
 		ModelObservable modelObservable = (ModelObservable) model;
 		modelObservable.registerObserver(this);
@@ -89,11 +89,11 @@ public class CalcViewJPanel extends JPanel implements ModelObserver {
 	}
 
 	@Override
-	public void update(ModelUpdateEvent event) {
+	public void update(CalcModelUpdateEvent event) {
 //		System.out.println("Update");
-		NumberInterface x = event.getX();
-		NumberInterface y = event.getY();
-		NumberInterface memory = event.getMemory();
+		NumberWrapperInterface x = event.getX();
+		NumberWrapperInterface y = event.getY();
+		NumberWrapperInterface memory = event.getMemory();
 		int operation = event.getOperation();
 
 		setXFieldText(x.getString());
@@ -107,12 +107,12 @@ public class CalcViewJPanel extends JPanel implements ModelObserver {
 
 	//Helper
 
-	private void setYVal(NumberInterface y){
+	private void setYVal(NumberWrapperInterface y){
 		if (y.getString().equals("0")) setXFieldText("");
 		else setYFieldText(y.getString());
 	}
 
-	private void setMemVal(NumberInterface mem){
+	private void setMemVal(NumberWrapperInterface mem){
 		if (mem.getString().equals("0")) setMemoryFieldText("");
 		else {
 			String text = "Mem: ";
@@ -123,27 +123,27 @@ public class CalcViewJPanel extends JPanel implements ModelObserver {
 
 	protected void setOperation(int option){
 		switch (option){
-			case ModelInterface.ADD:
+			case CalcModelInterface.ADD:
 				operationImg.setText("+");
 				break;
 
-			case ModelInterface.SUBTRACT:
+			case CalcModelInterface.SUBTRACT:
 				operationImg.setText("-");
 				break;
 
-			case ModelInterface.MULTIPLY:
+			case CalcModelInterface.MULTIPLY:
 				operationImg.setText("x");
 				break;
 
-			case ModelInterface.DIVIDE:
+			case CalcModelInterface.DIVIDE:
 				operationImg.setText("/");
 				break;
 
-			case ModelInterface.POWER:
+			case CalcModelInterface.POWER:
 				operationImg.setText("^");
 				break;
 
-			case ModelInterface.NO_OP:
+			case CalcModelInterface.NO_OP:
 				operationImg.setText("");
 				break;
 		}

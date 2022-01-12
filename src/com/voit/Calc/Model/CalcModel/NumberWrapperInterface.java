@@ -1,6 +1,6 @@
-package com.voit.Calc.Model;
+package com.voit.Calc.Model.CalcModel;
 
-public interface NumberInterface {
+public interface NumberWrapperInterface {
     String getString();
     double getValue();
     void setValue(double v);

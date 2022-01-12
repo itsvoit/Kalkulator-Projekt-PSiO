@@ -1,4 +1,4 @@
-package com.voit.Calc.Model;
+package com.voit.Calc.Model.MatrixModel;
 
 import java.io.Serializable;
 import java.util.Arrays;

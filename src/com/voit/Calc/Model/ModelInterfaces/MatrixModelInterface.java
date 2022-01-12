@@ -5,6 +5,9 @@ import com.voit.Calc.Model.MatrixModel.Matrix;
 import java.util.ArrayList;
 
 public interface MatrixModelInterface extends ModelInterface {
+	String MATRICES_FILE = "matrices.ser";
+	int OVERWRITE = 0;
+	int APPEND = 1;
 
 	Matrix getMatrix1();
 	Matrix getMatrix2();

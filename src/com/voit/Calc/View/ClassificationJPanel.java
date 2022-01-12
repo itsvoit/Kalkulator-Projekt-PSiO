@@ -1,6 +1,7 @@
 package com.voit.Calc.View;
 
 import com.voit.Calc.Controller.ControllerInterfaces.ClassifControllerInterface;
+import com.voit.Calc.Model.ClassifModel.ClassificationAlgorithmInterface;
 
 import javax.swing.*;
 
@@ -17,6 +18,7 @@ public class ClassificationJPanel extends JPanel {
 	private JFileChooser dataSetChooser;
 
 	private JButton submitButton;
+	private ClassificationAlgorithmInterface classifier;
 
 	public ClassificationJPanel(ClassifControllerInterface controller){
 		this.controller = controller;

@@ -317,11 +317,6 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
     //-------------------------------------------------------
     //-------------------- Matrix calc ----------------------
 
-    //Constants
-    private final String MATRICES_FILE = "matrices.ser";
-    private final int OVERWRITE = 0;
-    private final int APPEND = 1;
-
     private Matrix matrix1;
     private Matrix matrix2;
     private ArrayList<Matrix> matricesList;
@@ -398,4 +393,6 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
             matricesNamesList.add(matricesList.get(i).getName());
         }
     }
+
+
 }

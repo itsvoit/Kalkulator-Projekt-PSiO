@@ -35,7 +35,9 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
         xString = "";
         operation = NO_OP;
 
+        matricesList = new ArrayList<>();
         matricesNamesList = new ArrayList<>();
+        deserializeMatrices(APPEND);
     }
 
     //Getters
@@ -339,18 +341,26 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
     }
 
     public String[] getMatricesNames(){
+        String[] list = matricesNamesList.toArray(new String[0]);
+        for (String item : list) {
+            System.out.println(item);
+        }
         return matricesNamesList.toArray(new String[0]);
     }
 
     public Matrix getMatrix(int x){
+        System.out.println("Getting matrix: " + matricesList.get(x));
         return matricesList.get(x).clone();
     }
 
     public void addMatrix(Matrix m){
         if (matricesList.contains(m)) return;
 
+        System.out.println("Adding matrix: " + m);
         matricesList.add(m);
         matricesNamesList.add(m.getName());
+        notifyObservers();
+        serializeMatrices();
     }
 
     public void serializeMatrices(){
@@ -358,7 +368,7 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
             ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(MATRICES_FILE));
             outStream.writeObject(matricesList);
         } catch (IOException e) {
-            System.out.println("couldn't serialize matrices"); //todo debug comment
+            System.out.println("couldn't serialize matrices");
         }
     }
 

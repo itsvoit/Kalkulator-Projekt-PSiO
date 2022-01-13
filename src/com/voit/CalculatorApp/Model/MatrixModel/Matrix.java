@@ -5,10 +5,11 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Matrix implements Serializable, Cloneable {
+	private static final long serialVersionUID = -3554416904878538017L;
 	private int width;
 	private int height;
 	private double[][] matrix;
-	private String name; //todo implement name functionality
+	private String name;
 
 	public Matrix (int width, int height){
 		if (width <= 0) width = 1;
@@ -29,22 +30,90 @@ public class Matrix implements Serializable, Cloneable {
 		}
 	}
 
-	public int getWidth() {
-		return width;
+	public Matrix (double[][] tab){
+		if (tab == null) {
+			width = 3;
+			height = 3;
+		}
+		else if (tab[0] == null) {
+			width = tab.length;
+		}
+		else{
+			width = tab.length;
+			height = tab[0].length;
+		}
+		matrix = tab;
 	}
 
-	public int getHeight() {
-		return height;
+	/**
+	 * Add m to this matrix
+	 *
+	 * @param m Matrix to add
+	 * @return new Matrix: result of addition (this + m)
+	 */
+	public Matrix add(Matrix m){
+		if (height != m.getHeight()) return null;
+		if (width != m.getWidth()) return null;
+
+		Matrix out = new Matrix(width, height);
+
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				double val = getField(i, j) - m.getField(i, j);
+				out.setField(i, j, val);
+			}
+		}
+		return out;
 	}
 
-	public double[][] getMatrix(){
-		return matrix.clone();
+	/**
+	 * Subtract m from this matrix
+	 *
+	 * @param m Matrix to subtract
+	 * @return new Matrix: result of subtraction (this - m)
+	 */
+	public Matrix subtract(Matrix m){
+		if (height != m.getHeight()) return null;
+		if (width != m.getWidth()) return null;
+
+
+		Matrix out = new Matrix(width, height);
+
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				double val = getField(i, j) + m.getField(i, j);
+				out.setField(i, j, val);
+			}
+		}
+		return out;
 	}
 
-	public double getField(int x, int y) throws IndexOutOfBoundsException{
-		checkIndices(x, y);
+	/**
+	 * Multiply this by m
+	 * Works only if this.width == m.height
+	 * New matrix size will be [this.width, m.height]
+	 *
+	 * @param m Matrix to multiply by
+	 * @return new Matrix: result of multiplication (this * m)
+	 */
+	public Matrix multiply(Matrix m){
+		if (width != m.getHeight()) return null;
 
-		return matrix[x][y];
+		int rows1 = width;
+		int cols1 = height;
+		int cols2 = m.getHeight();
+
+		double[][] out = new double[rows1][cols2];
+
+		for (int i=0; i<rows1; i++){
+			for (int j=0; j<cols2; j++){
+				for (int k=0; k<cols1; k++){
+					out[i][j] += getField(i, k) * m.getField(k, j);
+//                    System.out.printf("[%d][%d] += [%d][%d] * [%d][%d]\n", i, j, i, j, i, k);
+				}
+			}
+		}
+		return new Matrix(out);
 	}
 
 	public void setMatrix(double[][] matrix) {
@@ -70,10 +139,40 @@ public class Matrix implements Serializable, Cloneable {
 		this.name = name;
 	}
 
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public double[][] getMatrix(){
+		return matrix.clone();
+	}
+
+	public double getField(int x, int y) throws IndexOutOfBoundsException{
+		checkIndices(x, y);
+
+		return matrix[x][y];
+	}
+
 	private void checkIndices(int x, int y) throws IndexOutOfBoundsException{
 		if (x >= this.width && y >= this.height) throw new IndexOutOfBoundsException("Indices are out of bounds");
 		else if (x >= this.width) throw new IndexOutOfBoundsException("X index is out of bounds");
 		else if (y >= this.height) throw new IndexOutOfBoundsException("Y index is out of bounds");
+	}
+
+	public String toString(){
+		StringBuilder out = new StringBuilder();
+		out.append(name).append("\n");
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				out.append(getField(i, j)).append(" ");
+			}
+			out.append("\n");
+		}
+		return out.toString();
 	}
 
 	//Overrides for comparing Matrices
@@ -83,12 +182,12 @@ public class Matrix implements Serializable, Cloneable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Matrix matrix1 = (Matrix) o;
-		return width == matrix1.width && height == matrix1.height && Arrays.deepEquals(matrix, matrix1.matrix);
+		return name.equals(matrix1.getName()) && width == matrix1.width && height == matrix1.height && Arrays.deepEquals(matrix, matrix1.matrix);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(width, height);
+		int result = Objects.hash(width, height, name);
 		result = 31 * result + Arrays.deepHashCode(matrix);
 		return result;
 	}
@@ -98,6 +197,7 @@ public class Matrix implements Serializable, Cloneable {
 		try {
 			Matrix clone = (Matrix) super.clone();
 			clone.setMatrix(matrix.clone());
+			clone.setName(name);
 			clone.height = height;
 			clone.width = width;
 			clone.setName(this.getName());

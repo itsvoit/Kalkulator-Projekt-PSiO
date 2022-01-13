@@ -3,16 +3,17 @@ package com.voit.CalculatorApp.View;
 import com.voit.CalculatorApp.Controller.ControllerInterfaces.MatrixControllerInterface;
 import com.voit.CalculatorApp.Model.MatrixModel.Matrix;
 import com.voit.CalculatorApp.Model.ModelInterfaces.MatrixModelInterface;
-import com.voit.CalculatorApp.Model.ModelObservers.CalcModelUpdateEvent;
-import com.voit.CalculatorApp.Model.ModelObservers.ModelObserver;
-import com.voit.CalculatorApp.View.MatrixDisplay.MatrixDisplayPanel;
+import com.voit.CalculatorApp.Model.ModelObservers.MatrixModelObserver;
+import com.voit.CalculatorApp.Model.ModelObservers.MatrixModelUpdateEvent;
+import com.voit.CalculatorApp.Model.ModelObservers.ModelObservable;
+import com.voit.CalculatorApp.Model.ModelObservers.ModelUpdateEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class MatricesJPanel extends JPanel implements ModelObserver {
+public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 	private final int MAX_DIMENSION = 10;
 	private final int H_GAP = 5;
 	private final int V_GAP = 5;
@@ -53,8 +54,13 @@ public class MatricesJPanel extends JPanel implements ModelObserver {
 	}
 
 	@Override
-	public void update(CalcModelUpdateEvent e) {
-		//todo update from model
+	public void update(ModelUpdateEvent e) {
+		MatrixModelUpdateEvent event = (MatrixModelUpdateEvent) e;
+		((InnerMatrixPanel) matrix1).makeTopButtons();
+		((InnerMatrixPanel) matrix2).makeTopButtons();
+		System.out.println("Updated matrix view");
+		this.revalidate();
+		this.repaint();
 	}
 
 	private class InnerMatrixPanel extends JPanel{

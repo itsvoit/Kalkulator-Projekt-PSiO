@@ -6,9 +6,7 @@ import com.voit.CalculatorApp.Model.MatrixModel.Matrix;
 import com.voit.CalculatorApp.Model.ModelInterfaces.CalcModelInterface;
 import com.voit.CalculatorApp.Model.ModelInterfaces.ClassifModelInterface;
 import com.voit.CalculatorApp.Model.ModelInterfaces.MatrixModelInterface;
-import com.voit.CalculatorApp.Model.ModelObservers.CalcModelUpdateEvent;
-import com.voit.CalculatorApp.Model.ModelObservers.ModelObservable;
-import com.voit.CalculatorApp.Model.ModelObservers.ModelObserver;
+import com.voit.CalculatorApp.Model.ModelObservers.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -308,9 +306,15 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
 
     @Override
     public void notifyObservers() {
-        CalcModelUpdateEvent event = new CalcModelUpdateEvent(this);
+        System.out.println("Notifying observers");
+        CalcModelUpdateEvent eventC = new CalcModelUpdateEvent(this);
+        MatrixModelUpdateEvent eventM = new MatrixModelUpdateEvent(this);
         for (int i = 0; i < observers.size(); i++) {
-            observers.get(i).update(event);
+            ModelObserver obs = observers.get(i);
+            if (obs instanceof CalcModelObserver)
+                obs.update(eventC);
+            else if (obs instanceof MatrixModelObserver)
+                obs.update(eventM);
         }
     }
 

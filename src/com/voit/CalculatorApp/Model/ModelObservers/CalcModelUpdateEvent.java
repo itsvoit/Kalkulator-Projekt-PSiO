@@ -3,7 +3,7 @@ package com.voit.CalculatorApp.Model.ModelObservers;
 import com.voit.CalculatorApp.Model.CalcModel.NumberWrapperInterface;
 import com.voit.CalculatorApp.Model.ModelInterfaces.CalcModelInterface;
 
-public class CalcModelUpdateEvent {
+public class CalcModelUpdateEvent implements ModelUpdateEvent{
 	private NumberWrapperInterface x;
 	private NumberWrapperInterface y;
 	private NumberWrapperInterface memory;

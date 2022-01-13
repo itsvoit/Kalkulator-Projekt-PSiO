@@ -2,9 +2,10 @@ package com.voit.CalculatorApp.View;
 
 import com.voit.CalculatorApp.Model.CalcModel.NumberWrapperInterface;
 import com.voit.CalculatorApp.Model.ModelInterfaces.CalcModelInterface;
+import com.voit.CalculatorApp.Model.ModelObservers.CalcModelObserver;
 import com.voit.CalculatorApp.Model.ModelObservers.CalcModelUpdateEvent;
 import com.voit.CalculatorApp.Model.ModelObservers.ModelObservable;
-import com.voit.CalculatorApp.Model.ModelObservers.ModelObserver;
+import com.voit.CalculatorApp.Model.ModelObservers.ModelUpdateEvent;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -12,7 +13,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 
-public class CalcViewJPanel extends JPanel implements ModelObserver {
+public class CalcViewJPanel extends JPanel implements CalcModelObserver {
 
 	private final int H_GAP = 5;
 	private final int V_GAP = 5;
@@ -89,8 +90,9 @@ public class CalcViewJPanel extends JPanel implements ModelObserver {
 	}
 
 	@Override
-	public void update(CalcModelUpdateEvent event) {
+	public void update(ModelUpdateEvent e) {
 //		System.out.println("Update");
+		CalcModelUpdateEvent event = (CalcModelUpdateEvent) e;
 		NumberWrapperInterface x = event.getX();
 		NumberWrapperInterface y = event.getY();
 		NumberWrapperInterface memory = event.getMemory();

@@ -59,7 +59,7 @@ public class Matrix implements Serializable, Cloneable {
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				double val = getField(i, j) - m.getField(i, j);
+				double val = getField(i, j) + m.getField(i, j);
 				out.setField(i, j, val);
 			}
 		}
@@ -81,7 +81,7 @@ public class Matrix implements Serializable, Cloneable {
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				double val = getField(i, j) + m.getField(i, j);
+				double val = getField(i, j) - m.getField(i, j);
 				out.setField(i, j, val);
 			}
 		}
@@ -97,7 +97,7 @@ public class Matrix implements Serializable, Cloneable {
 	 * @return new Matrix: result of multiplication (this * m)
 	 */
 	public Matrix multiply(Matrix m){
-		if (width != m.getHeight()) return null;
+		if (height != m.getWidth()) return null;
 
 		int rows1 = width;
 		int cols1 = height;
@@ -108,8 +108,9 @@ public class Matrix implements Serializable, Cloneable {
 		for (int i=0; i<rows1; i++){
 			for (int j=0; j<cols2; j++){
 				for (int k=0; k<cols1; k++){
+					System.out.printf("[%d][%d] += [%d][%d] * [%d][%d]\n", i, j, i, j, i, k);
+					System.out.printf("  %f   +=   %f   *   %f  \n", out[i][j], getField(i, k), m.getField(k, j));
 					out[i][j] += getField(i, k) * m.getField(k, j);
-//                    System.out.printf("[%d][%d] += [%d][%d] * [%d][%d]\n", i, j, i, j, i, k);
 				}
 			}
 		}
@@ -182,7 +183,7 @@ public class Matrix implements Serializable, Cloneable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Matrix matrix1 = (Matrix) o;
-		return name.equals(matrix1.getName()) && width == matrix1.width && height == matrix1.height && Arrays.deepEquals(matrix, matrix1.matrix);
+		return width == matrix1.width && height == matrix1.height && Arrays.deepEquals(matrix, matrix1.matrix);
 	}
 
 	@Override

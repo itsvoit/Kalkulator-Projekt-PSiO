@@ -24,10 +24,11 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 
 	private MatrixControllerInterface controller;
 
-	private JPanel matrix1;
-	private JPanel operations;
-	private JPanel matrix2;
-	private JPanel outputMatrix;
+	private InnerMatrixPanel matrix1;
+	private OperationsPanel operations;
+	private InnerMatrixPanel matrix2;
+
+	private OutputMatrixPanel outputMatrix;
 
 	public MatricesJPanel(MatrixModelInterface model, MatrixControllerInterface controller){
 		this.controller = controller;
@@ -47,19 +48,27 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 		centerPanel.add(operations);
 		centerPanel.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
 		centerPanel.add(matrix2);
+		outputMatrix = new OutputMatrixPanel(new Matrix(3,3));
 		this.add(Box.createVerticalGlue());
 		this.add(centerPanel);
+		this.add(Box.createVerticalGlue());
+		this.add(outputMatrix);
 		this.add(Box.createVerticalGlue());
 	}
 
 	@Override
 	public void update(ModelUpdateEvent e) {
 		MatrixModelUpdateEvent event = (MatrixModelUpdateEvent) e;
-		((InnerMatrixPanel) matrix1).makeTopButtons();
-		((InnerMatrixPanel) matrix2).makeTopButtons();
+		matrix1.makeTopButtons();
+		matrix2.makeTopButtons();
 		System.out.println("Updated matrix view");
 		this.revalidate();
 		this.repaint();
+	}
+
+	private void setMatrix(int i, Matrix m){
+		if (i == 0) matrix1.setMatrix(m);
+		else if (i == 1) matrix2.setMatrix(m);
 	}
 
 	public class InnerMatrixPanel extends JPanel{
@@ -93,6 +102,10 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 
 		public Matrix getMatrix(){
 			return matrixPanel.getMatrix();
+		}
+
+		public void setMatrix(Matrix m){
+			matrixPanel.setMatrix(m);
 		}
 
 		public void makeTopButtons(){
@@ -140,7 +153,7 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 
 			loadButton.addActionListener(e -> {
 				int index = comboBox.getSelectedIndex();
-				if (index > -1) matrixPanel.loadMatrix(controller.getMatrix(index));
+				if (index > -1) matrixPanel.setMatrix(controller.getMatrix(index));
 			});
 
 			saveButton.addActionListener(e -> {
@@ -292,7 +305,7 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 			 *
 			 * @param m matrix to load
 			 */
-			public void loadMatrix(Matrix m){
+			public void setMatrix(Matrix m){
 				System.out.println("Loading matrix: " + m);
 				if (m == null) return;
 				nameString = m.getName();
@@ -449,25 +462,48 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 
 		private void add(){
 			getMatrices();
-			m1.add(m2);
-			//todo update output
+			Matrix out = m1.add(m2);
+			if (out == null) {
+				outputMatrix.cannotPerformOperation();
+				return;
+			}
+			Matrix emptyOut = new Matrix(out.getWidth(), out.getHeight());
+			out.setName("");
+			emptyOut.setName("");
+			if (!out.equals(emptyOut)) outputMatrix.setOutputMatrix(out);
 		}
 
 		private void subtract(){
 			getMatrices();
-			m1.subtract(m2);
-			//todo update output
+			Matrix out = m1.subtract(m2);
+			if (out == null) {
+				outputMatrix.cannotPerformOperation();
+				return;
+			}
+			Matrix emptyOut = new Matrix(out.getWidth(), out.getHeight());
+			out.setName("");
+			emptyOut.setName("");
+			if (!out.equals(emptyOut)) outputMatrix.setOutputMatrix(out);
 		}
 
 		private void multiply(){
 			getMatrices();
-			m1.multiply(m2);
-			//todo update output
+			Matrix out = m1.multiply(m2);
+			if (out == null) {
+				outputMatrix.cannotPerformOperation();
+				return;
+			}
+			Matrix emptyOut = new Matrix(out.getWidth(), out.getHeight());
+			out.setName("");
+			emptyOut.setName("");
+			if (!out.equals(emptyOut)) {
+				outputMatrix.setOutputMatrix(out);
+			}
 		}
 
 		private void getMatrices(){
-			m1 = ((InnerMatrixPanel)matrix1).getMatrix();
-			m2 = ((InnerMatrixPanel)matrix2).getMatrix();
+			m1 = matrix1.getMatrix();
+			m2 = matrix2.getMatrix();
 		}
 	}
 
@@ -479,10 +515,29 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 		private JButton swap2Button;
 		private JButton clearButton;
 
-		public OutputMatrixPanel(int width, int height){
-			this.width = width;
-			this.height = height;
+		private JPanel matrixPanel;
+
+		private boolean error;
+
+		public OutputMatrixPanel(Matrix m){
+			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			this.width = m.getWidth();
+			this.height = m.getHeight();
 			matrixFields = new JTextField[width][height];
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height; j++) {
+					matrixFields[i][j] = new JTextField();
+					JTextField field = matrixFields[i][j];
+					field.setText("0");
+					field.setHorizontalAlignment(SwingConstants.CENTER);
+					field.setFont(FIELD_FONT);
+					field.setEditable(false);
+					field.setFocusable(false);
+					field.setOpaque(false);
+					field.setBorder(BorderFactory.createEmptyBorder());
+				}
+			}
+
 			swap1Button = new JButton("Swap 1");
 			swap2Button = new JButton("Swap 2");
 			clearButton = new JButton("Clear");
@@ -491,19 +546,121 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 			swap2Button.addActionListener(e -> swap2());
 			clearButton.addActionListener(e -> clear());
 
-			//todo create output panel for a matrix
+			setOutputMatrix(m);
+		}
+
+		public void cannotPerformOperation(){
+			error = true;
+			this.width = 1;
+			this.height = 1;
+			matrixFields = new JTextField[1][1];
+			matrixFields[0][0]= new JTextField("Cannot perform this operation");
+			JTextField field = matrixFields[0][0];
+			field.setHorizontalAlignment(SwingConstants.CENTER);
+			field.setFont(FIELD_FONT);
+			field.setEditable(false);
+			field.setFocusable(false);
+			field.setOpaque(false);
+			field.setBorder(BorderFactory.createEmptyBorder());
+			layoutOutputMatrix();
+		}
+
+		private void layoutOutputMatrix(){
+			this.removeAll();
+			matrixPanel = new JPanel();
+			this.add(matrixPanel);
+
+			matrixPanel.setLayout(new GridLayout(width, height, 3, 3));
+
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height; j++) {
+					matrixPanel.add(matrixFields[i][j]);
+				}
+			}
+
+			JPanel buttons = new JPanel();
+			buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
+			buttons.add(Box.createHorizontalGlue());
+			buttons.add(swap1Button);
+			buttons.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
+			buttons.add(swap2Button);
+			buttons.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
+			buttons.add(clearButton);
+			buttons.add(Box.createHorizontalGlue());
+
+			this.add(Box.createVerticalGlue());
+			this.add(buttons);
+			this.add(Box.createVerticalGlue());
+
+			this.revalidate();
+			this.repaint();
+		}
+
+		public void setOutputMatrix(Matrix m){
+			error = false;
+			this.width = m.getWidth();
+			this.height = m.getHeight();
+
+			matrixFields = new JTextField[width][height];
+
+			for (int i = 0; i < m.getWidth(); i++) {
+				for (int j = 0; j < m.getHeight(); j++) {
+					matrixFields[i][j] = new JTextField(Double.toString(m.getField(i, j)));
+					matrixFields[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+					matrixFields[i][j].setFont(FIELD_FONT);
+					matrixFields[i][j].setEditable(false);
+					matrixFields[i][j].setFocusable(false);
+					matrixFields[i][j].setOpaque(false);
+					matrixFields[i][j].setBorder(BorderFactory.createEmptyBorder());
+				}
+			}
+			layoutOutputMatrix();
+			this.setVisible(true);
 		}
 
 		private void swap1(){
-
+			if (error) return;
+			setMatrix(0, getMatrix());
+			this.revalidate();
+			this.repaint();
 		}
 
 		private void swap2(){
-
+			if (error) return;
+			setMatrix(1, getMatrix());
+			this.revalidate();
+			this.repaint();
 		}
 
 		private void clear(){
+			if (error) return;
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height; j++) {
+					matrixFields[i][j] = new JTextField();
+					JTextField field = matrixFields[i][j];
+					field.setText("0");
+					field.setHorizontalAlignment(SwingConstants.CENTER);
+					field.setFont(FIELD_FONT);
+					field.setEditable(false);
+					field.setFocusable(false);
+					field.setOpaque(false);
+					field.setBorder(BorderFactory.createEmptyBorder());
+				}
+			}
+			layoutOutputMatrix();
+			this.revalidate();
+			this.repaint();
+		}
 
+		private Matrix getMatrix(){
+			Matrix m = new Matrix(width, height);
+			m.setName("");
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height; j++) {
+					m.setField(i, j, Double.parseDouble(matrixFields[i][j].getText()));
+				}
+			}
+			return m;
 		}
 	}
 

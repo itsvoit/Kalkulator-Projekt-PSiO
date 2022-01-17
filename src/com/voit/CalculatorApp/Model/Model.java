@@ -354,18 +354,18 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
     }
 
     public void addMatrix(Matrix m){
-        if (m.getName() == null){
+        if (m.getName() == null || m.getName().equals("")){
             int i=1;
             while (true){
                 if (matricesNamesList.contains(Integer.toString(i))) {
                     i++;
                     continue;
                 }
-
                 m.setName(Integer.toString(i));
                 break;
             }
         }
+
         if (matricesList.contains(m)) return;
 
         System.out.println("Adding matrix: " + m);

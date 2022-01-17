@@ -97,7 +97,7 @@ public class View {
 
 	public void makeGUI(){
 		mainFrame = new JFrame(APP_NAME);
-		showCalc(); //on default show calc; todo make app remember last used view and show it instead
+		showCalc(); //on default show calc
 		defaultView = calcPanel;
 		defaultFrameSizeX = FRAME_X_CALC;
 		defaultFrameSizeY = FRAME_Y_CALC;
@@ -233,7 +233,7 @@ public class View {
 		fileExit = new JMenuItem("Exit");
 
 		mainMenuBar.add(menuFile);
-		mainMenuBar.add(menuAbout);
+//		mainMenuBar.add(menuAbout);
 
 		menuFile.add(fileCalc);
 		menuFile.add(fileClassif);
@@ -270,6 +270,7 @@ public class View {
 		if (panel == null || title == null) return;
 		defaultView = panel;
 		defaultTitle = title;
+		mainFrame.setTitle(title);
 	}
 
 	private void setDefaultView(int option){

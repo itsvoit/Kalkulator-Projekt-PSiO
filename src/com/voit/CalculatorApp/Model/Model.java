@@ -38,6 +38,7 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
         operation = NO_OP;
 
         matricesNamesList = new ArrayList<>();
+        matricesList = new ArrayList<>();
     }
 
     //Getters
@@ -343,10 +344,23 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
     }
 
     public void addMatrix(Matrix m){
+        if (m.getName() == null){
+            int i=1;
+            while (true){
+                if (matricesNamesList.contains(Integer.toString(i))) {
+                    i++;
+                    continue;
+                }
+
+                m.setName(Integer.toString(i));
+                break;
+            }
+        }
         if (matricesList.contains(m)) return;
 
         matricesList.add(m);
         matricesNamesList.add(m.getName());
+        serializeMatrices();
     }
 
     public void serializeMatrices(){

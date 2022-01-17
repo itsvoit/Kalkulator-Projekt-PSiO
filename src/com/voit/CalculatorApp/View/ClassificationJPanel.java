@@ -76,6 +76,8 @@ public class ClassificationJPanel extends JPanel {
 		});
 
 		algorithms = new JComboBox<>(controller.getAlgorithmsList());
+		algorithms.setMaximumSize(new Dimension(400, 100));
+		algorithms.setAlignmentX(0.5f);
 		algorithms.addItemListener(e -> {
 			final int index = algorithms.getSelectedIndex();
 			switch (index){

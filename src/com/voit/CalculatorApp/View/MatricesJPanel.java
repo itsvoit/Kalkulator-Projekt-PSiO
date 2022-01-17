@@ -43,15 +43,6 @@ public class MatricesJPanel extends JPanel implements ModelObserver {
 		this.add(Box.createVerticalGlue());
 	}
 
-	private void loadMatrices(int option){
-		//todo load matrices
-		controller.deserializeMatrices(option);
-	}
-
-	private void saveMatrices(){
-		controller.serializeMatrices();
-	}
-
 	@Override
 	public void update(CalcModelUpdateEvent e) {
 		//todo update from model

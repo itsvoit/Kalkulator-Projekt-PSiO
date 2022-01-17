@@ -5,16 +5,21 @@ import com.voit.CalculatorApp.Model.ModelInterfaces.MatrixModelInterface;
 
 import java.util.ArrayList;
 
-public class MatrixModelUpdateEvent {
+public class MatrixModelUpdateEvent implements ModelUpdateEvent{
 
 	private Matrix matrix1;
 	private Matrix matrix2;
 	private ArrayList<Matrix> matricesList;
+	private String[] matricesNames;
 
 	public MatrixModelUpdateEvent(MatrixModelInterface model){
 		matrix1 = model.getMatrix1();
 		matrix2 = model.getMatrix2();
 		matricesList = model.getMatrices();
+		matricesNames = new String[matricesList.size()];
+		for (int i=0; i<matricesNames.length; i++) {
+			matricesNames[i] = matricesList.get(i).getName();
+		}
 	}
 
 	public Matrix getMatrix1() {
@@ -27,5 +32,9 @@ public class MatrixModelUpdateEvent {
 
 	public ArrayList<Matrix> getMatricesList() {
 		return matricesList;
+	}
+
+	public String[] getMatricesNames(){
+		return matricesNames;
 	}
 }

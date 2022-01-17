@@ -9,11 +9,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-//todo Things to implement:
-// - training data choice (or a way to choose none)
-// - data set choice
-// - classification algorithm choice
-// - for K-neighbors alg choice for the K parameter
 public class ClassificationJPanel extends JPanel {
 	//Constants
 	private final int ZERO_R = 0;
@@ -69,7 +64,7 @@ public class ClassificationJPanel extends JPanel {
 				System.out.println("Cannot start classification without those files, choose different file(s) and try again... ");
 			} else {
 				classifier.train(trainingData);
-				int correct = classifier.classify(data); //todo make output fields (JTextFields, i.e. correctField)
+				int correct = classifier.classify(data);
 				makeResultFields(correct);
 				showResults();
 			}

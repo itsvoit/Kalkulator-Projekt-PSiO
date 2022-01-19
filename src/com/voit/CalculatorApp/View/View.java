@@ -24,7 +24,7 @@ public class View {
 	private final String APP_NAME = "Calculator";
 	private final int FRAME_X_CALC = 500;
 	private final int FRAME_Y_CALC = 600;
-	private final int FRAME_X_MATRIX = 600;
+	private final int FRAME_X_MATRIX = 600; //600 //todo
 	private final int FRAME_Y_MATRIX = 450;
 	private final int FRAME_X_CLASSIF = 400;
 	private final int FRAME_Y_CLASSIF = 500;

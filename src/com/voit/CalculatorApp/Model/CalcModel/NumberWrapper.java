@@ -1,24 +1,25 @@
 package com.voit.CalculatorApp.Model.CalcModel;
 
-public class NumberWrapperWrapper implements NumberWrapperInterface {
+public class NumberWrapper implements NumberWrapperInterface {
     private double value;
     private boolean fractional;
 
-    public NumberWrapperWrapper(){
+    public NumberWrapper(){
         value = 0.0;
     }
 
-    public NumberWrapperWrapper(double v){
+    public NumberWrapper(double v){
         setValue(v);
     }
 
-    public NumberWrapperWrapper(double value, boolean fractional){
+    public NumberWrapper(double value, boolean fractional){
         this.value = value;
         this.fractional = fractional;
     }
 
     @Override
     public String getString() {
+//        System.out.println("Evaluating string for " + getValue()); //todo debug
         int x = (int)value;
         if (x == value) {
             String out = Integer.toString(x);
@@ -45,5 +46,9 @@ public class NumberWrapperWrapper implements NumberWrapperInterface {
     @Override
     public boolean isFractional(){
         return fractional;
+    }
+
+    public String toString(){
+        return Double.toString(getValue());
     }
 }

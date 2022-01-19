@@ -1,7 +1,7 @@
 package com.voit.CalculatorApp.Model;
 
+import com.voit.CalculatorApp.Model.CalcModel.NumberWrapper;
 import com.voit.CalculatorApp.Model.CalcModel.NumberWrapperInterface;
-import com.voit.CalculatorApp.Model.CalcModel.NumberWrapperWrapper;
 import com.voit.CalculatorApp.Model.MatrixModel.Matrix;
 import com.voit.CalculatorApp.Model.ModelInterfaces.CalcModelInterface;
 import com.voit.CalculatorApp.Model.ModelInterfaces.ClassifModelInterface;
@@ -42,15 +42,15 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
 
     //Getters
     public NumberWrapperInterface getX() {
-        return new NumberWrapperWrapper(xVal, comma);
+        return new NumberWrapper(xVal, comma);
     }
 
     public NumberWrapperInterface getY() {
-        return new NumberWrapperWrapper(yVal);
+        return new NumberWrapper(yVal);
     }
 
     public NumberWrapperInterface getMemory() {
-        return new NumberWrapperWrapper(memoryVal);
+        return new NumberWrapper(memoryVal);
     }
 
     public int getOperation() {
@@ -263,7 +263,7 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
             }
             if (!comma) xVal = Integer.parseInt(returnString);
             else xVal = Double.parseDouble(returnString);
-//            System.out.println(xVal);
+//            System.out.println(xVal);  //todo debug
         }
     }
 
@@ -308,7 +308,7 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
 
     @Override
     public void notifyObservers() {
-        System.out.println("Notifying observers");
+//        System.out.println("Notifying observers"); //todo debug
         CalcModelUpdateEvent eventC = new CalcModelUpdateEvent(this);
         MatrixModelUpdateEvent eventM = new MatrixModelUpdateEvent(this);
         for (int i = 0; i < observers.size(); i++) {
@@ -343,13 +343,13 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
     public String[] getMatricesNames(){
         String[] list = matricesNamesList.toArray(new String[0]);
         for (String item : list) {
-            System.out.println(item);
+//            System.out.println(item); //todo debug
         }
         return matricesNamesList.toArray(new String[0]);
     }
 
     public Matrix getMatrix(int x){
-        System.out.println("Getting matrix: " + matricesList.get(x));
+//        System.out.println("Getting matrix: " + matricesList.get(x)); //todo debug
         return matricesList.get(x).clone();
     }
 
@@ -368,7 +368,7 @@ public class Model implements CalcModelInterface, MatrixModelInterface, ClassifM
 
         if (matricesList.contains(m)) return;
 
-        System.out.println("Adding matrix: " + m);
+//        System.out.println("Adding matrix: " + m); //todo debug
         matricesList.add(m);
         matricesNamesList.add(m.getName());
 

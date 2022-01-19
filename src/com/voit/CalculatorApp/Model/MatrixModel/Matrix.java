@@ -108,8 +108,8 @@ public class Matrix implements Serializable, Cloneable {
 		for (int i=0; i<rows1; i++){
 			for (int j=0; j<cols2; j++){
 				for (int k=0; k<cols1; k++){
-					System.out.printf("[%d][%d] += [%d][%d] * [%d][%d]\n", i, j, i, j, i, k);
-					System.out.printf("  %f   +=   %f   *   %f  \n", out[i][j], getField(i, k), m.getField(k, j));
+//					System.out.printf("[%d][%d] += [%d][%d] * [%d][%d]\n", i, j, i, j, i, k); //todo debug
+//					System.out.printf("  %f   +=   %f   *   %f  \n", out[i][j], getField(i, k), m.getField(k, j));
 					out[i][j] += getField(i, k) * m.getField(k, j);
 				}
 			}

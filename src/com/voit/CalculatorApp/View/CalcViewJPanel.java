@@ -77,26 +77,19 @@ public class CalcViewJPanel extends JPanel implements CalcModelObserver {
 		setXFieldText("0");
 	}
 
-	protected void setXFieldText(String text){
-		xField.setText(text);
-	}
-
-	protected void setYFieldText(String text){
-		yField.setText(text);
-	}
-
-	protected void setMemoryFieldText(String text){
-		memoryField.setText(text);
-	}
-
 	@Override
 	public void update(ModelUpdateEvent e) {
-//		System.out.println("Update");
+//		System.out.println("Update calculator view");  //todo debug
 		CalcModelUpdateEvent event = (CalcModelUpdateEvent) e;
 		NumberWrapperInterface x = event.getX();
 		NumberWrapperInterface y = event.getY();
 		NumberWrapperInterface memory = event.getMemory();
 		int operation = event.getOperation();
+
+//		System.out.println("x: " + x);  //todo debug
+//		System.out.println("y: " + y);
+//		System.out.println("memory " + memory);
+//		System.out.println("operation: " + operation);
 
 		setXFieldText(x.getString());
 		setYVal(y);
@@ -108,9 +101,8 @@ public class CalcViewJPanel extends JPanel implements CalcModelObserver {
 	}
 
 	//Helper
-
 	private void setYVal(NumberWrapperInterface y){
-		if (y.getString().equals("0")) setXFieldText("");
+		if (y.getString().equals("0")) setYFieldText("");
 		else setYFieldText(y.getString());
 	}
 
@@ -121,6 +113,19 @@ public class CalcViewJPanel extends JPanel implements CalcModelObserver {
 			text += mem.getString();
 			setMemoryFieldText(text);
 		}
+	}
+
+	protected void setXFieldText(String text){
+		xField.setText(text);
+//		System.out.println("x text is now: " + text); //todo debug
+	}
+
+	protected void setYFieldText(String text){
+		yField.setText(text);
+	}
+
+	protected void setMemoryFieldText(String text){
+		memoryField.setText(text);
 	}
 
 	protected void setOperation(int option){

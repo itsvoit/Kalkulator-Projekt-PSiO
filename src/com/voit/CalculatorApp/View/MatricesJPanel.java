@@ -33,24 +33,24 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 	public MatricesJPanel(MatrixModelInterface model, MatrixControllerInterface controller){
 		this.controller = controller;
 		((ModelObservable) model).registerObserver(this);
-		System.out.println("Registering MatricesJPanel as observer of Model");
+//		System.out.println("Registering MatricesJPanel as observer of Model"); //todo debug
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		makeMatrices();
 	}
 
 	private void makeMatrices(){
-		JPanel centerPanel = new JPanel();
+		JPanel inputMatricesPanel = new JPanel();
 		matrix1 = new InnerMatrixPanel();
 		operations = new OperationsPanel();
 		matrix2 = new InnerMatrixPanel();
-		centerPanel.add(matrix1);
-		centerPanel.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
-		centerPanel.add(operations);
-		centerPanel.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
-		centerPanel.add(matrix2);
+		inputMatricesPanel.add(matrix1);
+		inputMatricesPanel.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
+		inputMatricesPanel.add(operations);
+		inputMatricesPanel.add(Box.createRigidArea(new Dimension(H_GAP, V_GAP)));
+		inputMatricesPanel.add(matrix2);
 		outputMatrix = new OutputMatrixPanel(new Matrix(3,3));
 		this.add(Box.createVerticalGlue());
-		this.add(centerPanel);
+		this.add(inputMatricesPanel);
 		this.add(Box.createVerticalGlue());
 		this.add(outputMatrix);
 		this.add(Box.createVerticalGlue());
@@ -61,7 +61,7 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 		MatrixModelUpdateEvent event = (MatrixModelUpdateEvent) e;
 		matrix1.makeTopButtons();
 		matrix2.makeTopButtons();
-		System.out.println("Updated matrix view");
+//		System.out.println("Updated matrix view"); //todo debug
 		this.revalidate();
 		this.repaint();
 	}
@@ -135,7 +135,7 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 			int y = Integer.parseInt(height.getText());
 
 			matrixPanel.changeDimensions(x, y);
-			System.out.println("New dimensions: " + x + ", " + y);
+//			System.out.println("New dimensions: " + x + ", " + y); //todo debug
 			refresh();
 		}
 
@@ -297,7 +297,7 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 				width = x;
 				height = y;
 				layoutMatrix();
-				showDebug();
+//				showDebug(); //todo debug
 			}
 
 			/**
@@ -306,7 +306,7 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 			 * @param m matrix to load
 			 */
 			public void setMatrix(Matrix m){
-				System.out.println("Loading matrix: " + m);
+//				System.out.println("Loading matrix: " + m); //todo debug
 				if (m == null) return;
 				nameString = m.getName();
 				width = m.getWidth();
@@ -512,7 +512,7 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 		private boolean error;
 
 		public OutputMatrixPanel(Matrix m){
-			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			this.width = m.getWidth();
 			this.height = m.getHeight();
 			matrixFields = new JTextField[width][height];
@@ -533,6 +533,9 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 			swap1Button = new JButton("Swap 1");
 			swap2Button = new JButton("Swap 2");
 			clearButton = new JButton("Clear");
+			clearButton.setBorder(BorderFactory.createCompoundBorder(clearButton.getBorder(),
+					BorderFactory.createEmptyBorder(0, 8, 0, 8)));
+//			clearButton.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
 
 			swap1Button.addActionListener(e -> swap1());
 			swap2Button.addActionListener(e -> swap2());
@@ -559,8 +562,15 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 
 		private void layoutOutputMatrix(){
 			this.removeAll();
+			JPanel matrixLayoutPanel = new JPanel();
+			matrixLayoutPanel.setLayout(new BoxLayout(matrixLayoutPanel, BoxLayout.Y_AXIS));
+
 			matrixPanel = new JPanel();
-			this.add(matrixPanel);
+//			matrixPanel.setBackground(Color.cyan.brighter()); //todo debug
+
+			this.add(Box.createHorizontalGlue());
+			this.add(matrixLayoutPanel);
+			this.add(Box.createHorizontalGlue());
 
 			matrixPanel.setLayout(new GridLayout(width, height, 3, 3));
 
@@ -571,6 +581,7 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 			}
 
 			JPanel buttons = new JPanel();
+//			buttons.setBackground(Color.green.brighter().brighter()); //todo debug
 			buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 			buttons.add(Box.createHorizontalGlue());
 			buttons.add(swap1Button);
@@ -580,9 +591,8 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 			buttons.add(clearButton);
 			buttons.add(Box.createHorizontalGlue());
 
-			this.add(Box.createVerticalGlue());
-			this.add(buttons);
-			this.add(Box.createVerticalGlue());
+			matrixLayoutPanel.add(matrixPanel);
+			matrixLayoutPanel.add(buttons);
 
 			this.revalidate();
 			this.repaint();

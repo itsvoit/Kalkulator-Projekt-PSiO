@@ -605,7 +605,12 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 
 			for (int i = 0; i < m.getWidth(); i++) {
 				for (int j = 0; j < m.getHeight(); j++) {
-					matrixFields[i][j] = new JTextField(Double.toString(m.getField(i, j)));
+					double val = m.getField(i, j);
+					if (val == (int)val){
+						matrixFields[i][j] = new JTextField(Integer.toString((int)val));
+					} else {
+						matrixFields[i][j] = new JTextField(Double.toString(val));
+					}
 					matrixFields[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 					matrixFields[i][j].setFont(FIELD_FONT);
 					matrixFields[i][j].setEditable(false);

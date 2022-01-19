@@ -35,4 +35,9 @@ public class NearestMeanClassifier implements ClassificationAlgorithmInterface{
 		bag = new net.sf.javaml.classification.NearestMeanClassifier();
 		bag.buildClassifier(data);
 	}
+
+	@Override
+	public Classifier getClassifier() {
+		return bag;
+	}
 }

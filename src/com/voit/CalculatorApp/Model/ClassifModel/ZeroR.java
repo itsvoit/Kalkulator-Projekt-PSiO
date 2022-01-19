@@ -35,4 +35,9 @@ public class ZeroR implements ClassificationAlgorithmInterface{
 		zeroR = new net.sf.javaml.classification.ZeroR();
 		zeroR.buildClassifier(data);
 	}
+
+	@Override
+	public Classifier getClassifier() {
+		return zeroR;
+	}
 }

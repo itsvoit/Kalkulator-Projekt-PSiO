@@ -36,4 +36,9 @@ public class MeanFeatureVoting implements ClassificationAlgorithmInterface {
 		mfv = new MeanFeatureVotingClassifier();
 		mfv.buildClassifier(data);
 	}
+
+	@Override
+	public Classifier getClassifier() {
+		return mfv;
+	}
 }

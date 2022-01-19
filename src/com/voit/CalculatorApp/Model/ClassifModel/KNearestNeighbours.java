@@ -37,4 +37,9 @@ public class KNearestNeighbours implements ClassificationAlgorithmInterface{
 		knn = new KNearestNeighbors(15);
 		knn.buildClassifier(data);
 	}
+
+	@Override
+	public Classifier getClassifier() {
+		return knn;
+	}
 }

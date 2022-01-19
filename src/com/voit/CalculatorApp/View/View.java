@@ -1,7 +1,6 @@
 package com.voit.CalculatorApp.View;
 
 import com.voit.CalculatorApp.Controller.Controller;
-import com.voit.CalculatorApp.Controller.ControllerInterfaces.MatrixControllerInterface;
 import com.voit.CalculatorApp.Model.Model;
 import com.voit.CalculatorApp.Model.ModelInterfaces.CalcModelInterface;
 import com.voit.CalculatorApp.Model.ModelInterfaces.ClassifModelInterface;
@@ -27,8 +26,8 @@ public class View {
 	private final int FRAME_Y_CALC = 600;
 	private final int FRAME_X_MATRIX = 600;
 	private final int FRAME_Y_MATRIX = 450;
-	private final int FRAME_X_CLASSIF = 800;
-	private final int FRAME_Y_CLASSIF = 1000;
+	private final int FRAME_X_CLASSIF = 400;
+	private final int FRAME_Y_CLASSIF = 500;
 	private String aboutMessage;
 
 	private final int DEFAULT_CALC = 0;
@@ -57,15 +56,6 @@ public class View {
 
 	//About
 	private JPanel aboutPanel;
-
-	//Menu
-	private JMenuBar mainMenuBar;
-	private JMenu menuFile;
-	private JMenuItem fileCalc;
-	private JMenuItem fileClassif;
-	private JMenuItem fileMatrix;
-	private JMenuItem fileExit;
-	private JMenuItem menuAbout;
 
 	//Listeners for about
 	private WindowListener restoreViewWindowListener;
@@ -204,8 +194,7 @@ public class View {
 	}
 
 	private void makeMatrixPanel(MatrixModelInterface model){
-		matrixPanel = new MatricesJPanel(model, (MatrixControllerInterface) controller);
-
+		matrixPanel = new MatricesJPanel(model, controller);
 	}
 
 	private void makeClassifPanel(ClassifModelInterface model){
@@ -222,15 +211,16 @@ public class View {
 	}
 
 	private void makeMenuBar(){
-		mainMenuBar = new JMenuBar();
+		//Menu
+		JMenuBar mainMenuBar = new JMenuBar();
 		mainFrame.setJMenuBar(mainMenuBar);
 
-		menuFile = new JMenu("File");
-		menuAbout = new JMenuItem("About");
-		fileCalc = new JMenuItem("Calculator");
-		fileClassif = new JMenuItem("Data classification");
-		fileMatrix = new JMenuItem("Matrix");
-		fileExit = new JMenuItem("Exit");
+		JMenu menuFile = new JMenu("File");
+		JMenuItem menuAbout = new JMenuItem("About");
+		JMenuItem fileCalc = new JMenuItem("Calculator");
+		JMenuItem fileClassif = new JMenuItem("Data classification");
+		JMenuItem fileMatrix = new JMenuItem("Matrix");
+		JMenuItem fileExit = new JMenuItem("Exit");
 
 		mainMenuBar.add(menuFile);
 //		mainMenuBar.add(menuAbout);

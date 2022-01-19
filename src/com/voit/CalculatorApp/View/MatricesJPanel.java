@@ -467,10 +467,8 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 				outputMatrix.cannotPerformOperation();
 				return;
 			}
-			Matrix emptyOut = new Matrix(out.getWidth(), out.getHeight());
 			out.setName("");
-			emptyOut.setName("");
-			if (!out.equals(emptyOut)) outputMatrix.setOutputMatrix(out);
+			outputMatrix.setOutputMatrix(out);
 		}
 
 		private void subtract(){
@@ -480,10 +478,8 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 				outputMatrix.cannotPerformOperation();
 				return;
 			}
-			Matrix emptyOut = new Matrix(out.getWidth(), out.getHeight());
 			out.setName("");
-			emptyOut.setName("");
-			if (!out.equals(emptyOut)) outputMatrix.setOutputMatrix(out);
+			outputMatrix.setOutputMatrix(out);
 		}
 
 		private void multiply(){
@@ -493,12 +489,8 @@ public class MatricesJPanel extends JPanel implements MatrixModelObserver {
 				outputMatrix.cannotPerformOperation();
 				return;
 			}
-			Matrix emptyOut = new Matrix(out.getWidth(), out.getHeight());
 			out.setName("");
-			emptyOut.setName("");
-			if (!out.equals(emptyOut)) {
-				outputMatrix.setOutputMatrix(out);
-			}
+			outputMatrix.setOutputMatrix(out);
 		}
 
 		private void getMatrices(){
